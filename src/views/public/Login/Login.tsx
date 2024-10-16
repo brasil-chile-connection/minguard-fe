@@ -7,10 +7,10 @@ import { BaseInput, BaseButton } from '@components';
 function Login(): JSX.Element {
   const navigate = useNavigate();
   return (
-    <div className="d-flex container-fluid h-100">
+    <div className="d-flex container-fluid h-100 p-4">
       <div
         className="container my-auto mx-auto"
-        style={{ width: '40%', maxWidth: '450px' }}
+        style={{ width: '100%', maxWidth: '450px' }}
       >
         <div className="d-flex flex-column align-items-center gap-3">
           <span className="text-center">

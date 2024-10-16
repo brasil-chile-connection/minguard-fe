@@ -1,4 +1,4 @@
-import './PublicLayout.css';
+import './PublicLayout.scoped.css';
 import { Outlet } from 'react-router-dom';
 
 /*

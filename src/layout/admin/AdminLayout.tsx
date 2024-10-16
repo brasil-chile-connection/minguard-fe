@@ -1,4 +1,4 @@
-import './AdminLayout.css';
+import './AdminLayout.scoped.css';
 import { Outlet } from 'react-router-dom';
 
 import Navbar from './components/Navbar/Navbar';
