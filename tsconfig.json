@@ -26,10 +26,11 @@
     "paths": {
       "@/*": ["./src/*"],
       "@assets/*": ["./src/assets/*"],
+      "@components": ["./src/components/index"],
       "@components/*": ["./src/components/*"],
       "@views/*": ["./src/views/*"],
       "@layout/*": ["./src/layout/*"],
-      "@services/*": ["./src/services/*"],
+      "@services/*": ["./src/services/*"]
     }
   },
   "include": ["src", "vite.config.ts"],
