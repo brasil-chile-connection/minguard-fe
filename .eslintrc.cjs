@@ -44,6 +44,7 @@ module.exports = {
       'error',
       { devDependencies: ['src/scaffolding/commands/*'] },
     ],
+    'class-methods-use-this': ["error", { "exceptMethods": ["args"] }],
     'react/require-default-props': [
       'error',
       {
