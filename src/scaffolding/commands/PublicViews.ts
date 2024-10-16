@@ -1,4 +1,10 @@
-import { BaseCommand, Arg, RunnableArgs, renderTemplate, includeRelated } from 'angel-manager';
+import {
+  BaseCommand,
+  Arg,
+  RunnableArgs,
+  renderTemplate,
+  includeRelated,
+} from 'angel-manager';
 
 export default class Components extends BaseCommand {
   /**
