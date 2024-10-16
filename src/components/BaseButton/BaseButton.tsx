@@ -1,10 +1,10 @@
 import React from 'react';
 import './BaseButton.css';
 
-import { Variant } from 'react-bootstrap/esm/types';
+import { ButtonVariant } from 'react-bootstrap/esm/types';
 
 interface BaseButtonProps extends React.InputHTMLAttributes<HTMLButtonElement> {
-  type?: Variant;
+  type?: ButtonVariant;
 }
 
 function BaseButton({

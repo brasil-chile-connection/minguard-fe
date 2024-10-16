@@ -1,9 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import PublicLayout from '@layout/public/PublicLayout';
-import publicRoutes from './routes/publicRoutes';
+import FallbackView from '@views/Fallback';
 
-import FallbackView from './views/Fallback';
+import PublicLayout from '@layout/public/PublicLayout';
+import AdminLayout from '@layout/admin/AdminLayout';
+
+import publicRoutes from './routes/publicRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 const router = createBrowserRouter([
   {
@@ -13,6 +16,11 @@ const router = createBrowserRouter([
         path: '/',
         element: <PublicLayout />,
         children: publicRoutes,
+      },
+      {
+        path: '/admin',
+        element: <AdminLayout />,
+        children: adminRoutes,
       },
     ],
   },
