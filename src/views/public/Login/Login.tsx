@@ -17,7 +17,7 @@ function Login(): JSX.Element {
             <h1>Bem Vindo</h1>
             <h2>Minguard Manager</h2>
           </span>
-          <div className="login-input-container text-center gap-3">
+          <div className="login-input-container bg-darkgrey text-center gap-3">
             <h3>Login</h3>
             <div>
               <BaseInput icon="fas fa-envelope" placeholder="Email" />
