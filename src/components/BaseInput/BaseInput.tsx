@@ -9,6 +9,7 @@ interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 function BaseInput({
+  name,
   value,
   placeholder,
   icon = '',
@@ -31,6 +32,7 @@ function BaseInput({
             </span>
           )}
           <input
+            name={name}
             className="form-control"
             type={type}
             value={value}

@@ -40,7 +40,7 @@ function Navbar(): JSX.Element {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/admin/tickets">
+              <a className="nav-link" href="/admin/equipe">
                 Equipe
               </a>
             </li>

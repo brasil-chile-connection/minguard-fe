@@ -1,4 +1,10 @@
-import { User } from '@/types/user';
+export type User = {
+  id: number;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  role: string;
+};
 
 interface AuthData {
   token: string | null;
@@ -40,6 +46,11 @@ class Auth {
   public static getToken = (): string | null => {
     const authData = this.getAuthData();
     return authData.token;
+  };
+
+  public static clearToken = (): void => {
+    const authData = this.getAuthData();
+    this.setAuthData({ ...authData, token: null });
   };
 
   public static getRoles = (): number[] | null => {
