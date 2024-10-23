@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-cycle
+import api from './api';
+
 export type User = {
   id: number;
   firstName: string | null;
@@ -28,9 +31,14 @@ class Auth {
     localStorage.setItem(AUTH_KEY, JSON.stringify(data));
   };
 
-  public static isAuthenticated = (): boolean => {
-    const authData = this.getAuthData();
-    return authData.token !== null;
+  public static isAuthenticated = async (): Promise<boolean> => {
+    try {
+      await api.get('/user/me');
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
   };
 
   public static hasRole = (): boolean => {
