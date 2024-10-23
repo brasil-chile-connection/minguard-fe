@@ -16,13 +16,14 @@ function BaseInput({
   feedback = '',
   feedbackType = 'valid',
   type = 'text',
+  disabled = false,
   onChange,
 }: BaseInputProps): JSX.Element {
   const inputId = useId();
   return (
     <div className="base-input">
       <label htmlFor={inputId} className="form-label">
-        {label}
+        <strong>{label}</strong>
         <div className="input-group">
           {icon && (
             <span className="input-group-text" id="basic-addon3">
@@ -36,6 +37,7 @@ function BaseInput({
             id={inputId}
             aria-describedby="basic-addon3 basic-addon4"
             placeholder={placeholder}
+            disabled={disabled}
             onChange={onChange}
           />
         </div>

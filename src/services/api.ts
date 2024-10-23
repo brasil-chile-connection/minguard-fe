@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { getToken } from './auth';
 import state from './state';
+
+import Auth from './auth';
 
 const isProd = process.env.NODE_ENV === 'production';
 
-const apiUrl = isProd ? 'https://your.domain.com.br' : 'http://127.0.0.1:3333';
+const apiUrl = isProd ? 'https://your.domain.com.br' : 'http://127.0.0.1:8089';
 
 const api = axios.create({
   baseURL: apiUrl,
@@ -12,7 +13,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async config => {
-    const token = getToken();
+    const token = Auth.getToken();
     const newConfig = { ...config };
     if (token) {
       if (state.role && state.prefix) {

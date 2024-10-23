@@ -10,10 +10,16 @@ interface BaseButtonProps extends React.InputHTMLAttributes<HTMLButtonElement> {
 function BaseButton({
   children,
   type = 'light',
+  disabled = false,
   onClick,
 }: BaseButtonProps): JSX.Element {
   return (
-    <button type="button" className={`btn btn-${type}`} onClick={onClick}>
+    <button
+      type="button"
+      className={`btn btn-${type}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
       {children}
     </button>
   );

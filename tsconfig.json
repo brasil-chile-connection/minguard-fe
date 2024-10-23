@@ -28,6 +28,7 @@
       "@assets/*": ["./src/assets/*"],
       "@components": ["./src/components/index"],
       "@components/*": ["./src/components/*"],
+      "@types/*": ["./src/types/*"],
       "@views/*": ["./src/views/*"],
       "@layout/*": ["./src/layout/*"],
       "@services/*": ["./src/services/*"]

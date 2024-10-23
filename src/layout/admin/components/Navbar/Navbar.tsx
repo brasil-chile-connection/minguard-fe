@@ -2,7 +2,7 @@ import './Navbar.css';
 
 function Navbar(): JSX.Element {
   return (
-    <nav className="navbar navbar-expand-lg bg-body-primary">
+    <nav className="navbar navbar-expand-lg bg-body-primary px-4">
       <div className="container-fluid">
         <a className="navbar-brand text-white" href="/admin/dashboard">
           MINGUARD
@@ -37,6 +37,11 @@ function Navbar(): JSX.Element {
             <li className="nav-item">
               <a className="nav-link" href="/admin/tickets">
                 Tickets
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="/admin/tickets">
+                Equipe
               </a>
             </li>
           </ul>

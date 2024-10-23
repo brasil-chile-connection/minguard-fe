@@ -40,11 +40,12 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
     'import/no-extraneous-dependencies': [
       'error',
       { devDependencies: ['src/scaffolding/commands/*'] },
     ],
-    'class-methods-use-this': ["error", { "exceptMethods": ["args"] }],
+    'class-methods-use-this': ['error', { exceptMethods: ['args'] }],
     'react/require-default-props': [
       'error',
       {
