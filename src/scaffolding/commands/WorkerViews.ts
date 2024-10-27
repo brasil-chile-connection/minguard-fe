@@ -6,26 +6,26 @@ import {
   includeRelated,
 } from 'angel-manager';
 
-export default class Layout extends BaseCommand {
+export default class WorkerViews extends BaseCommand {
   /**
    * Command name is used to run the command
    */
-  public commandName = 'make:layout';
+  public commandName = 'make:worker-view';
 
   /**
    * Description of the command
    */
-  public description = 'Makes a new Layout';
+  public description = 'Makes a new workerView';
 
   /**
    * Liquid template path
    */
-  public templatePath = 'layout';
+  public templatePath = 'views/worker';
 
   /**
    * Processed template destination path
    */
-  public destinationPath = 'layout';
+  public destinationPath = 'views/worker';
 
   /**
    * The extension of the component
@@ -43,7 +43,7 @@ export default class Layout extends BaseCommand {
    * to be passed to the command in the order they are defined
    */
   public args(): Arg[] {
-    return [{ name: 'roleName', type: 'string' }];
+    return [{ name: 'viewName', type: 'string' }];
   }
 
   public async run(args: RunnableArgs): Promise<void> {
