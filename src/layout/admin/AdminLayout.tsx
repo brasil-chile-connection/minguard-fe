@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import './AdminLayout.scoped.css';
 import { Outlet, useNavigate } from 'react-router-dom';
 
+import { toast } from 'react-toastify';
 import Auth from '@services/auth';
 import Navbar from './components/Navbar/Navbar';
 
@@ -12,6 +13,9 @@ function AdminLayout(): JSX.Element {
       const isAuthenticated = await Auth.isAuthenticated();
       if (!isAuthenticated) {
         navigate('/');
+        toast.error('Sessão expirada. Faça login novamente.', {
+          position: 'bottom-center',
+        });
       }
     };
 

@@ -5,12 +5,19 @@ import './UserList.scoped.css';
 import { toast } from 'react-toastify';
 import api from '@services/api';
 
-import { BaseTable, BaseButton } from '@components';
+import { BaseTable, BaseButton, BaseModal } from '@components';
 import { User } from '@/types/user';
 
 function UserList(): JSX.Element {
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
+  const [modals, setModals] = useState({
+    deleteUser: {
+      userId: 0,
+      userRole: '',
+      open: false,
+    },
+  });
 
   const loadUsers = async (): Promise<void> => {
     try {
@@ -30,6 +37,33 @@ function UserList(): JSX.Element {
   useEffect(() => {
     void loadUsers();
   }, []);
+
+  const handleDeleteUser = async (): Promise<void> => {
+    try {
+      await api.delete(`/users/${modals.deleteUser.userId}`);
+
+      toast.success('Usuário deletado com sucesso!', {
+        position: 'bottom-center',
+      });
+    } catch (e) {
+      console.error(e);
+      toast.error(
+        'Erro ao deletar usuário. Por favor tente novamente mais tarde.',
+        {
+          position: 'bottom-center',
+        },
+      );
+    }
+  };
+
+  const translateRole = (roleName?: string): string => {
+    return (
+      {
+        WORKER: 'Minerador',
+        ADMIN: 'Administrador',
+      }[roleName || ''] || 'Usuário'
+    );
+  };
   return (
     <div className="container-fluid h-100 p-3 p-md-4">
       <div className="row h-100">
@@ -73,7 +107,11 @@ function UserList(): JSX.Element {
                       <td>{user.lastName}</td>
                       <td>{`(${user.mobilePrefix} ${user.mobileNumber})`}</td>
                       <td className="d-flex gap-2">
-                        <BaseButton aria-label="Visualizar Usuário" size="sm">
+                        <BaseButton
+                          aria-label="Visualizar Usuário"
+                          size="sm"
+                          onClick={() => navigate(`/admin/usuarios/${user.id}`)}
+                        >
                           <i className="fas fa-eye" />
                         </BaseButton>
                         <BaseButton
@@ -85,7 +123,20 @@ function UserList(): JSX.Element {
                         >
                           <i className="fas fa-edit text-info" />
                         </BaseButton>
-                        <BaseButton aria-label="Excluir Usuário" size="sm">
+                        <BaseButton
+                          aria-label="Excluir Usuário"
+                          size="sm"
+                          onClick={() => {
+                            setModals({
+                              ...modals,
+                              deleteUser: {
+                                userId: user.id,
+                                userRole: user.role.name,
+                                open: true,
+                              },
+                            });
+                          }}
+                        >
                           <i className="fas fa-trash text-danger" />
                         </BaseButton>
                       </td>
@@ -138,7 +189,11 @@ function UserList(): JSX.Element {
                       <td>{user.lastName}</td>
                       <td>{`(${user.mobilePrefix} ${user.mobileNumber})`}</td>
                       <td className="d-flex gap-2">
-                        <BaseButton aria-label="Visualizar Usuário" size="sm">
+                        <BaseButton
+                          aria-label="Visualizar Usuário"
+                          size="sm"
+                          onClick={() => navigate(`/admin/usuarios/${user.id}`)}
+                        >
                           <i className="fas fa-eye" />
                         </BaseButton>
                         <BaseButton
@@ -150,7 +205,20 @@ function UserList(): JSX.Element {
                         >
                           <i className="fas fa-edit text-info" />
                         </BaseButton>
-                        <BaseButton aria-label="Excluir Usuário" size="sm">
+                        <BaseButton
+                          aria-label="Excluir Usuário"
+                          size="sm"
+                          onClick={() => {
+                            setModals({
+                              ...modals,
+                              deleteUser: {
+                                userId: user.id,
+                                userRole: user.role.name,
+                                open: true,
+                              },
+                            });
+                          }}
+                        >
                           <i className="fas fa-trash text-danger" />
                         </BaseButton>
                       </td>
@@ -161,6 +229,53 @@ function UserList(): JSX.Element {
           </div>
         </div>
       </div>
+      <BaseModal
+        open={modals.deleteUser.open}
+        size="sm"
+        onClose={() =>
+          setModals(prev => {
+            return {
+              ...prev,
+              deleteUser: {
+                ...prev.deleteUser,
+                open: false,
+              },
+            };
+          })
+        }
+      >
+        <div className="modal-header">
+          <span className="modal-title fw-bold">
+            <i className="fas fa-user" /> Excluir{' '}
+            {translateRole(modals.deleteUser.userRole)}
+          </span>
+        </div>
+        <div className="modal-body text-center align-middle p-4">
+          <i className="fas fa-trash fa-4x text-danger" />
+          <h4>Você confirma a exclusão deste usuário?</h4>
+        </div>
+        <div className="modal-footer gap-2">
+          <BaseButton
+            type="secondary"
+            onClick={() =>
+              setModals(prev => {
+                return {
+                  ...prev,
+                  deleteUser: {
+                    ...prev.deleteUser,
+                    open: false,
+                  },
+                };
+              })
+            }
+          >
+            Cancelar
+          </BaseButton>
+          <BaseButton type="success" onClick={handleDeleteUser}>
+            <i className="fas fa-check" /> Confirmar
+          </BaseButton>
+        </div>
+      </BaseModal>
     </div>
   );
 }

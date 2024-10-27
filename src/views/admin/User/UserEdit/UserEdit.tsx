@@ -78,7 +78,7 @@ function UserEdit(): JSX.Element {
     try {
       await api.put(`user/update/${user?.role.name}`, formData);
 
-      toast.success('Usuário criado com sucesso!.', {
+      toast.success('Usuário alterado com sucesso!.', {
         position: 'bottom-center',
       });
 
@@ -86,7 +86,7 @@ function UserEdit(): JSX.Element {
     } catch (e) {
       console.error(e);
       toast.error(
-        'Erro ao criar novo usuário. Por favor tente novamente mais tarde.',
+        'Erro ao alterar usuário. Por favor tente novamente mais tarde.',
         {
           position: 'bottom-center',
         },
