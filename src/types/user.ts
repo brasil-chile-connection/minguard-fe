@@ -1,12 +1,4 @@
 export type User = {
-  id: number;
-  firstName: string | null;
-  lastName: string | null;
-  email: string;
-  role: string;
-};
-
-export type UserResponse = {
   id: 0;
   email: string;
   firstName: string;
@@ -21,8 +13,31 @@ export type UserResponse = {
     name: string;
   };
   role: {
-    id: 0;
+    id: number;
     name: string;
   };
   profilePicturePath: string;
+};
+
+export type UserForm = {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  firstName: string;
+  lastName: string;
+  mobilePrefix: string;
+  mobileNumber: string;
+  acceptTc: boolean;
+  genderId: number;
+};
+
+export type UserEdit = {
+  password: string;
+  passwordConfirm: string;
+  firstName: string;
+  lastName: string;
+  mobilePrefix: string;
+  mobileNumber: string;
+  acceptTc: boolean;
+  genderId: number;
 };

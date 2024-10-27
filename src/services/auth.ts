@@ -1,4 +1,13 @@
-import { User } from '@/types/user';
+// eslint-disable-next-line import/no-cycle
+import api from './api';
+
+export type User = {
+  id: number;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  role: string;
+};
 
 interface AuthData {
   token: string | null;
@@ -22,9 +31,15 @@ class Auth {
     localStorage.setItem(AUTH_KEY, JSON.stringify(data));
   };
 
-  public static isAuthenticated = (): boolean => {
-    const authData = this.getAuthData();
-    return authData.token !== null;
+  public static isAuthenticated = async (): Promise<boolean> => {
+    try {
+      const { status } = await api.get('/user/me');
+      console.log(status);
+      return status !== 403;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
   };
 
   public static hasRole = (): boolean => {
@@ -40,6 +55,11 @@ class Auth {
   public static getToken = (): string | null => {
     const authData = this.getAuthData();
     return authData.token;
+  };
+
+  public static clearToken = (): void => {
+    const authData = this.getAuthData();
+    this.setAuthData({ ...authData, token: null });
   };
 
   public static getRoles = (): number[] | null => {

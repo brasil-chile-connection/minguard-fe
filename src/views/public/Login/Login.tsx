@@ -10,7 +10,7 @@ import Auth from '@services/auth';
 import { BaseInput, BaseButton } from '@components';
 
 import { LoginResponse } from '@/types/auth';
-import { UserResponse } from '@/types/user';
+import { User } from '@/types/user';
 
 function Login(): JSX.Element {
   const navigate = useNavigate();
@@ -19,14 +19,14 @@ function Login(): JSX.Element {
 
   const handleLogin = async (): Promise<void> => {
     try {
+      Auth.clearToken();
       const { data } = await api.post<LoginResponse>('auth/login', {
         email,
         password,
       });
-
       Auth.signIn(data.token, [0], data.id);
 
-      const { data: user } = await api.get<UserResponse>(`user/me`);
+      const { data: user } = await api.get<User>(`user/me`);
       Auth.storeUserInfo(
         user.id,
         user.firstName,
@@ -39,7 +39,7 @@ function Login(): JSX.Element {
         position: 'bottom-center',
       });
 
-      navigate(`/${user.role.name}/dashboard`);
+      navigate(`/${user.role.name.toLowerCase()}/dashboard`);
     } catch (e) {
       console.error(e);
       toast.error('Credenciais inválidas. Tente novamente.', {

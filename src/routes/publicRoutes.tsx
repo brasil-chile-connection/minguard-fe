@@ -1,8 +1,9 @@
-import Home from '@views/public/Home/Home';
+import { Navigate } from 'react-router-dom';
+
 import Login from '@views/public/Login/Login';
 
 const publicRoutes = [
-  { path: '/', element: <Home /> },
+  { path: '/', element: <Navigate to="/login" /> },
   { path: '/login', element: <Login /> },
 ];
 
