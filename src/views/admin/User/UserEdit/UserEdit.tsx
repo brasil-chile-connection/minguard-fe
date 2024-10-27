@@ -1,29 +1,24 @@
 import { useState, useEffect } from 'react';
-import './UserForm.scoped.css';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import './UserEdit.scoped.css';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import api from '@services/api';
 import { toast } from 'react-toastify';
 
 import { BaseInput, BaseButton, BaseSelect, BaseModal } from '@components';
-import { UserForm as UserFormType } from '@/types/user';
+import { UserEdit as UserEditType, User } from '@/types/user';
 import { Gender } from '@/types/gender';
-import { Role } from '@/types/role';
 
-function UserForm(): JSX.Element {
+function UserEdit(): JSX.Element {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { userId } = useParams<{ userId: string }>();
   const [genders, setGenders] = useState<Gender[]>([]);
-  const [roles, setRoles] = useState<Role[]>([]);
   const [modals, setModals] = useState({
     submit: false,
   });
 
-  const [selectedRole, setSelectedRole] = useState(
-    Number(searchParams.get('roleId')) || 0,
-  );
-  const [formData, setFormData] = useState<UserFormType>({
-    email: '',
+  const [user, setUser] = useState<User>();
+  const [formData, setFormData] = useState<UserEditType>({
     acceptTc: true,
     firstName: '',
     genderId: 1,
@@ -49,14 +44,24 @@ function UserForm(): JSX.Element {
     }
   };
 
-  const handleLoadRoles = async (): Promise<void> => {
+  const handleLoadUser = async (): Promise<void> => {
     try {
-      const { data } = await api.get<Role[]>('/role');
-      setRoles(data);
+      const { data } = await api.get<User>(`user/${userId}`);
+      setUser(data);
+      setFormData({
+        ...formData,
+        ...{
+          firstName: data.firstName,
+          lastName: data.lastName,
+          mobileNumber: data.mobileNumber,
+          mobilePrefix: data.mobilePrefix,
+          genderId: data.gender.id,
+        },
+      });
     } catch (e) {
       console.error(e);
       toast.error(
-        'Erro ao carregar os dados da página. Tente novamente mais tarde.',
+        'Erro ao carregar os dados do usuário. Tente novamente mais tarde.',
         {
           position: 'bottom-center',
         },
@@ -65,14 +70,13 @@ function UserForm(): JSX.Element {
   };
 
   useEffect(() => {
+    void handleLoadUser();
     void handleLoadGenders();
-    void handleLoadRoles();
   }, []);
 
   const handleSubmit = async (): Promise<void> => {
     try {
-      const role = roles.find(r => r.id === selectedRole);
-      await api.post(`user/register/${role!.name}`, formData);
+      await api.put(`user/update/${user?.role.name}`, formData);
 
       toast.success('Usuário criado com sucesso!.', {
         position: 'bottom-center',
@@ -96,9 +100,15 @@ function UserForm(): JSX.Element {
     });
   };
 
-  const getSelectedRole = (): Role | undefined => {
-    return roles.find(r => r.id === selectedRole);
+  const translateRole = (roleName?: string): string => {
+    return (
+      {
+        WORKER: 'Minerador',
+        ADMIN: 'Administrador',
+      }[roleName || ''] || 'Usuário'
+    );
   };
+
   return (
     <div className="container-fluid p-4">
       <div className="container m-0" style={{ maxWidth: '800px' }}>
@@ -112,24 +122,13 @@ function UserForm(): JSX.Element {
             </BaseButton>
           </div>
           <div className="col-12 mb-3">
-            <h1 className="fw-bolder text-muted">Novo Usuário</h1>
+            <h1 className="fw-bolder text-muted">
+              Editar {translateRole(user?.role.name)}
+            </h1>
           </div>
         </div>
         <div className="card p-4 ps-3">
           <div className="row ">
-            <div className="col-12">
-              <BaseSelect
-                label="Tipo*"
-                value={selectedRole}
-                onChange={e => setSelectedRole(Number(e.target.value))}
-              >
-                {roles.map(role => (
-                  <option value={role.id} key={role.id}>
-                    {role.name}
-                  </option>
-                ))}
-              </BaseSelect>
-            </div>
             <div className="col-12 mb-2">
               <h3>Informações Pessoais:</h3>
             </div>
@@ -137,6 +136,7 @@ function UserForm(): JSX.Element {
               <BaseInput
                 name="firstName"
                 label="Nome*"
+                value={formData.firstName}
                 onChange={e => updateForm(e.target.value, e.target.name)}
               />
             </div>
@@ -144,6 +144,7 @@ function UserForm(): JSX.Element {
               <BaseInput
                 name="lastName"
                 label="Sobrenome*"
+                value={formData.lastName}
                 onChange={e => updateForm(e.target.value, e.target.name)}
               />
             </div>
@@ -172,7 +173,8 @@ function UserForm(): JSX.Element {
               <BaseInput
                 name="email"
                 label="Email*"
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                value={user?.email || ''}
+                disabled
               />
             </div>
             <div className="col-4" />
@@ -182,6 +184,7 @@ function UserForm(): JSX.Element {
                 name="password"
                 label="Senha*"
                 type="password"
+                value={formData.password}
                 onChange={e => updateForm(e.target.value, e.target.name)}
               />
             </div>
@@ -190,6 +193,7 @@ function UserForm(): JSX.Element {
                 name="passwordConfirm"
                 label="Confirmar Senha*"
                 type="password"
+                value={formData.passwordConfirm}
                 onChange={e => updateForm(e.target.value, e.target.name)}
               />
             </div>
@@ -198,6 +202,7 @@ function UserForm(): JSX.Element {
               <BaseInput
                 name="mobilePrefix"
                 label="DDD*"
+                value={formData.mobilePrefix}
                 onChange={e => updateForm(e.target.value, e.target.name)}
               />
             </div>
@@ -205,6 +210,7 @@ function UserForm(): JSX.Element {
               <BaseInput
                 name="mobileNumber"
                 label="Telefone*"
+                value={formData.mobileNumber}
                 onChange={e => updateForm(e.target.value, e.target.name)}
               />
             </div>
@@ -232,17 +238,13 @@ function UserForm(): JSX.Element {
       >
         <div className="modal-header">
           <span className="modal-title fw-bold">
-            <i className="fas fa-user" /> Novo{' '}
-            {
-              { WORKER: 'Minerador', ADMIN: 'Administrador' }[
-                getSelectedRole()?.name || 'Usuário'
-              ]
-            }
+            <i className="fas fa-user" /> Editar{' '}
+            {translateRole(user?.role.name)}
           </span>
         </div>
         <div className="modal-body text-center align-middle p-4">
           <i className="fas fa-save fa-4x text-info" />
-          <h4>Você confirma a criação de um novo usuário?</h4>
+          <h4>Você confirma as alterações?</h4>
         </div>
         <div className="modal-footer gap-2">
           <BaseButton
@@ -264,4 +266,4 @@ function UserForm(): JSX.Element {
   );
 }
 
-export default UserForm;
+export default UserEdit;

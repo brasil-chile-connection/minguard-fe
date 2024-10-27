@@ -4,6 +4,12 @@
   overflow: hidden;
 }
 
+td {
+  vertical-align: middle;
+}
+
+
+
 /* >= md */
 @media (min-width: 768px) {
   .h-md-100 {

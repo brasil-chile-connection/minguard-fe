@@ -12,6 +12,9 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.5",
     "@popperjs/core": "^2.11.8",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.8",

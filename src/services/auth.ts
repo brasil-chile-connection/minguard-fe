@@ -33,8 +33,9 @@ class Auth {
 
   public static isAuthenticated = async (): Promise<boolean> => {
     try {
-      await api.get('/user/me');
-      return true;
+      const { status } = await api.get('/user/me');
+      console.log(status);
+      return status !== 403;
     } catch (e) {
       console.error(e);
       return false;

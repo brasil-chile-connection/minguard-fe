@@ -30,3 +30,14 @@ export type UserForm = {
   acceptTc: boolean;
   genderId: number;
 };
+
+export type UserEdit = {
+  password: string;
+  passwordConfirm: string;
+  firstName: string;
+  lastName: string;
+  mobilePrefix: string;
+  mobileNumber: string;
+  acceptTc: boolean;
+  genderId: number;
+};

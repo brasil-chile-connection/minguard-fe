@@ -8,10 +8,14 @@ import Navbar from './components/Navbar/Navbar';
 function AdminLayout(): JSX.Element {
   const navigate = useNavigate();
   useEffect(() => {
-    const isAuthenticated = Auth.isAuthenticated();
-    if (!isAuthenticated) {
-      navigate('/');
-    }
+    const auth = async (): Promise<void> => {
+      const isAuthenticated = await Auth.isAuthenticated();
+      if (!isAuthenticated) {
+        navigate('/');
+      }
+    };
+
+    void auth();
   }, []);
   return (
     <div style={{ height: '100%' }}>
