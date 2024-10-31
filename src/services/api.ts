@@ -1,6 +1,7 @@
 import axios from 'axios';
 import state from './state';
 
+// eslint-disable-next-line import/no-cycle
 import Auth from './auth';
 
 const isProd = process.env.NODE_ENV === 'production';

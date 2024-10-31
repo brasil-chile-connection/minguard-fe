@@ -9,6 +9,7 @@ interface BaseSelectProps
 
 function BaseSelect({
   'aria-label': ariaLabel,
+  name,
   value,
   children = [],
   size = 'md',
@@ -23,6 +24,7 @@ function BaseSelect({
       <select
         className={`base-select form-select form-select-${size}`}
         value={value}
+        name={name}
         aria-label={ariaLabel}
         disabled={disabled}
         onChange={onChange}

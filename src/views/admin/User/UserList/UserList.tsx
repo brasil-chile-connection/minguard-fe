@@ -40,8 +40,13 @@ function UserList(): JSX.Element {
 
   const handleDeleteUser = async (): Promise<void> => {
     try {
-      await api.delete(`/users/${modals.deleteUser.userId}`);
+      await api.delete(`/user/${modals.deleteUser.userId}`);
+      setUsers(users.filter(user => user.id !== modals.deleteUser.userId));
 
+      setModals({
+        ...modals,
+        deleteUser: { ...modals.deleteUser, open: false },
+      });
       toast.success('Usuário deletado com sucesso!', {
         position: 'bottom-center',
       });

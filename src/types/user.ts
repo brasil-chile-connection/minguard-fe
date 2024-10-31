@@ -32,12 +32,12 @@ export type UserForm = {
 };
 
 export type UserEdit = {
-  password: string;
-  passwordConfirm: string;
-  firstName: string;
-  lastName: string;
-  mobilePrefix: string;
-  mobileNumber: string;
-  acceptTc: boolean;
-  genderId: number;
+  password?: string;
+  passwordConfirm?: string;
+  firstName?: string;
+  lastName?: string;
+  mobilePrefix?: string;
+  mobileNumber?: string;
+  acceptTc?: boolean;
+  genderId?: number;
 };

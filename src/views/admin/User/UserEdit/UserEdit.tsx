@@ -25,8 +25,8 @@ function UserEdit(): JSX.Element {
     lastName: '',
     mobileNumber: '',
     mobilePrefix: '',
-    password: '',
-    passwordConfirm: '',
+    password: undefined,
+    passwordConfirm: undefined,
   });
 
   const handleLoadGenders = async (): Promise<void> => {
@@ -74,23 +74,54 @@ function UserEdit(): JSX.Element {
     void handleLoadGenders();
   }, []);
 
-  const handleSubmit = async (): Promise<void> => {
-    try {
-      await api.put(`user/update/${user?.role.name}`, formData);
+  const clearFormData = (): UserEditType => {
+    const cpy = { ...formData };
+    const keys = Object.keys(cpy) as (keyof typeof cpy)[];
+    keys.forEach(key => {
+      if (cpy[key] === '') {
+        cpy[key] = undefined;
+      }
+    });
+    setFormData(cpy);
+    return cpy;
+  };
 
-      toast.success('Usuário alterado com sucesso!.', {
+  const checkPasswordFields = (): boolean => {
+    if (formData.password && !formData.passwordConfirm) {
+      toast.error('Você precisa confirmar a nova senha!', {
+        position: 'bottom-center',
+      });
+      setModals({ ...modals, submit: false });
+      return false;
+    }
+
+    if (!formData.password && formData.passwordConfirm) {
+      toast.error('Você precisa digitar a nova senha!', {
+        position: 'bottom-center',
+      });
+      setModals({ ...modals, submit: false });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (): Promise<void> => {
+    if (!checkPasswordFields()) return;
+    try {
+      const data = clearFormData();
+      await api.put(`user/${user?.id}`, data);
+
+      toast.success('Usuário salvo com sucesso!.', {
         position: 'bottom-center',
       });
 
       navigate('/admin/equipe');
     } catch (e) {
       console.error(e);
-      toast.error(
-        'Erro ao alterar usuário. Por favor tente novamente mais tarde.',
-        {
-          position: 'bottom-center',
-        },
-      );
+      toast.error('Erro ao alterar usuário. Por favor tente novamente', {
+        position: 'bottom-center',
+      });
     }
   };
 
