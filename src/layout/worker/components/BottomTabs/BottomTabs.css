@@ -1,0 +1,10 @@
+.bottom-tabs {
+  height: 60px;
+}
+
+.new-incident-btn {
+  background-color: transparent;
+  border: 2px solid orange;
+  font-size: 30px;
+  padding: 0px 15px;
+}
