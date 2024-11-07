@@ -1,0 +1,24 @@
+.dropzone-container {
+  height: 100%;
+  width: 100%;
+}
+
+.filepond--panel-root {
+  border: solid 3px rgb(165, 165, 165);
+}
+
+.filepond--root {
+  max-height: 15em;
+}
+
+.filepond--file {
+  background: rgb(35, 39, 46);
+  background: linear-gradient(
+    142deg,
+    rgba(35, 39, 46, 1) 7%,
+    rgba(59, 53, 42, 1) 39%,
+    rgba(120, 88, 32, 1) 100%,
+    rgba(135, 97, 29, 1) 100%,
+    rgba(210, 140, 16, 1) 100%
+  );
+}
