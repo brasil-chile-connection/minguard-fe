@@ -6,7 +6,7 @@ import Auth from './auth';
 
 const isProd = process.env.NODE_ENV === 'production';
 
-const apiUrl = isProd ? 'https://your.domain.com.br' : 'http://127.0.0.1:8089';
+const apiUrl = isProd ? 'http://18.234.81.184:8089' : 'http://127.0.0.1:8089';
 
 const api = axios.create({
   baseURL: apiUrl,
