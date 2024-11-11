@@ -2,7 +2,7 @@
   position: relative;
   /* 100% - navbar height */
   height: calc(100% - 56px);
-  width: 100%;
+  min-height: 100%;
   display: flex;
   background-color: #f5fbff;
 }

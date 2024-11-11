@@ -108,9 +108,21 @@ function IncidentView(): JSX.Element {
             <h2>Descrição</h2>
             <p>{incident?.description}</p>
           </div>
-          <div className="col-12">
+          <div className="d-flex col-12 flex-column gap-4">
             <strong className="fs-5">Imagens do ocorrido</strong>
-            ...
+            {incident?.images.map((image, index) => (
+              <div key={image}>
+                <span className="fw-bold">Imagem {index + 1}</span>
+                <a href={image} target="_blank" rel="noopener noreferrer">
+                  <img
+                    src={image}
+                    width="100%"
+                    style={{ maxWidth: '450px' }}
+                    aria-label={`Imagem ${index + 1} do incidente`}
+                  />
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       </div>

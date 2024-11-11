@@ -8,6 +8,7 @@ export type Incident = {
   location: string;
   urgency: Urgency;
   reporter: User;
+  images: string[];
   createdAt: Date;
   updatedAt: Date;
 };

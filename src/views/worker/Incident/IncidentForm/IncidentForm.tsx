@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './IncidentForm.scoped.css';
 
 import { useNavigate } from 'react-router-dom';
+import { FilePondFile, FilePondInitialFile } from 'filepond';
 
 import api from '@services/api';
 import { toast } from 'react-toastify';
@@ -20,6 +21,7 @@ import { IncidentForm as IncidentFormType } from '@/types/incident';
 function IncidentForm(): JSX.Element {
   const navigate = useNavigate();
   const [urgencyLevels, setUrgencyLevels] = useState<Urgency[]>([]);
+  const [images, setImages] = useState<FilePondFile[]>([]);
   const [modals, setModals] = useState({
     submit: false,
   });
@@ -55,7 +57,30 @@ function IncidentForm(): JSX.Element {
 
   const handleSubmit = async (): Promise<void> => {
     try {
-      await api.post(`incident/register`, formData);
+      const data = new FormData();
+      const json = JSON.stringify(formData);
+      const blob = new Blob([json], {
+        type: 'application/json',
+      });
+      data.append('request', blob);
+
+      const files: File[] = images.map(filePondFile => {
+        const { file } = filePondFile;
+        return new File([file], filePondFile.filename, {
+          type: file.type,
+          lastModified: file.lastModified,
+        });
+      });
+
+      files.forEach(image => {
+        if (image instanceof File) {
+          data.append('images', image);
+        } else {
+          console.error('Imagem inválida:', image);
+        }
+      });
+
+      await api.post(`incident/register`, data);
 
       toast.success('Incidente registrado com sucesso!.', {
         position: 'bottom-center',
@@ -138,10 +163,14 @@ function IncidentForm(): JSX.Element {
           <div className="col-12">
             <strong className="fs-5">Imagens do ocorrido</strong>
             <DropZone
+              files={images as unknown as FilePondInitialFile[]}
               labelIdle='<div><strong><span class="filepond--label-action btn btn-secondary">Selecione imagens...</span></strong>'
               acceptedFileTypes={['image/*']}
               allowDrop
               allowMultiple
+              onChange={files => {
+                setImages(files);
+              }}
             />
           </div>
         </div>
