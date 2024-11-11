@@ -1,40 +1,39 @@
 import {
   BaseCommand,
-  Arg,
   FileConfig,
+  Arg,
   RunnableArgs,
   renderTemplate,
-  includeRelated,
 } from 'angel-manager';
 
-export default class WorkerViews extends BaseCommand {
+export default class Routes extends BaseCommand {
   /**
    * Command name is used to run the command
    */
-  public commandName = 'make:worker-view';
+  public commandName = 'make:router';
 
   /**
    * Description of the command
    */
-  public description = 'Makes a new Worker View';
+  public description = 'Makes a new Router file config ';
 
   /**
    * Liquid template path
    */
-  public templatePath = 'views/worker';
+  public templatePath = 'routes';
 
   /**
    * Processed template destination path
    */
-  public destinationPath = 'views/worker';
+  public destinationPath = 'routes';
 
   public file: FileConfig = {
     // The name of the generated file
-    name: { argName: 'viewName', case: 'pascal' },
+    name: { argName: 'routerName', case: 'camel' },
     // The extension of the generated file
     extension: 'tsx',
     // If true, the code will be generated inside a directory named after the file.
-    subDir: true,
+    subDir: false,
   };
 
   /**
@@ -43,15 +42,14 @@ export default class WorkerViews extends BaseCommand {
    * to be passed to the command in the order they are defined
    */
   public args(): Arg[] {
-    return [{ name: 'viewName', type: 'string' }];
+    return [{ name: 'routerName', type: 'string' }];
   }
 
   public async run(args: RunnableArgs): Promise<void> {
     try {
       await renderTemplate(this, args);
-      includeRelated(this, args, ['scoped.css']);
     } catch (error) {
-      console.error();
+      console.error(error);
     }
   }
 }

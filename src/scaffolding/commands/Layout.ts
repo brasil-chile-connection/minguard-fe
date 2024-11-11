@@ -1,6 +1,7 @@
 import {
   BaseCommand,
   Arg,
+  FileConfig,
   RunnableArgs,
   renderTemplate,
   includeRelated,
@@ -27,15 +28,14 @@ export default class Layout extends BaseCommand {
    */
   public destinationPath = 'layout';
 
-  /**
-   * The extension of the component
-   */
-  public extension = 'tsx';
-
-  /**
-   * If true, the template will be generated inside componentName directory
-   */
-  public subDir = true;
+  public file: FileConfig = {
+    // The name of the generated file
+    name: { argName: 'layoutName', case: 'pascal' },
+    // The extension of the generated file
+    extension: 'tsx',
+    // If true, the code will be generated inside a directory named after the file.
+    subDir: false,
+  };
 
   /**
    *
@@ -43,7 +43,7 @@ export default class Layout extends BaseCommand {
    * to be passed to the command in the order they are defined
    */
   public args(): Arg[] {
-    return [{ name: 'roleName', type: 'string' }];
+    return [{ name: 'layoutName', type: 'string' }];
   }
 
   public async run(args: RunnableArgs): Promise<void> {

@@ -1,6 +1,7 @@
 import {
   BaseCommand,
   Arg,
+  FileConfig,
   RunnableArgs,
   renderTemplate,
   includeRelated,
@@ -27,15 +28,14 @@ export default class Components extends BaseCommand {
    */
   public destinationPath = 'components';
 
-  /**
-   * The extension of the component
-   */
-  public extension = 'tsx';
-
-  /**
-   * If true, the template will be generated inside componentName directory
-   */
-  public subDir = true;
+  public file: FileConfig = {
+    // The name of the generated file
+    name: { argName: 'componentName', case: 'pascal' },
+    // The extension of the generated file
+    extension: 'tsx',
+    // If true, the code will be generated inside a directory named after the file.
+    subDir: true,
+  };
 
   /**
    *
