@@ -1,9 +1,3 @@
-.table-container {
-  flex: 1;
-  background-color: darkgrey;
-  overflow: hidden;
-}
-
 .urgency-badge {
   display: block;
   height: 20px;

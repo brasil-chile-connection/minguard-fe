@@ -5,6 +5,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Auth from '@services/auth';
 import Navbar from './components/Navbar/Navbar';
+import BottomTabs from './components/BottomTabs/BottomTabs';
 
 function WorkerLayout(): JSX.Element {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ function WorkerLayout(): JSX.Element {
       <div className="page-content">
         <Outlet />
       </div>
+      <BottomTabs />
     </div>
   );
 }
