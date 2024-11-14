@@ -7,7 +7,7 @@ import Auth from './auth';
 const isProd = process.env.NODE_ENV === 'production';
 
 const apiUrl = isProd
-  ? 'http://ec2-3-216-132-189.compute-1.amazonaws.com:8089/'
+  ? 'http://ec2-44-222-78-85.compute-1.amazonaws.com:8089/'
   : 'http://127.0.0.1:8089';
 
 const api = axios.create({
