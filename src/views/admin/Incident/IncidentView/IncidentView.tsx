@@ -7,16 +7,37 @@ import { scaleLinear } from 'd3-scale';
 import api from '@services/api';
 import { toast } from 'react-toastify';
 
-import { BaseButton } from '@components';
+import {
+  BaseButton,
+  BaseModal,
+  TextArea,
+  BaseSelect,
+  DropZone,
+} from '@components';
+
+import { FilePondFile, FilePondInitialFile } from 'filepond';
 
 import { Urgency } from '@/types/urgency';
-import { Incident } from '@/types/incident';
+import { IncidentForm, Incident } from '@/types/incident';
 
 function IncidentView(): JSX.Element {
   const navigate = useNavigate();
   const { incidentId } = useParams<{ incidentId: string }>();
   const [incident, setIncident] = useState<Incident>();
   const [urgencyLevels, setUrgencyLevels] = useState<Urgency[]>([]);
+  const [images, setImages] = useState<FilePondFile[]>([]);
+  const [modals, setModals] = useState({
+    ticketForm: false,
+    submitTicket: false,
+  });
+
+  /* TODO: Modificar para TicketForm */
+  const [formData, setFormData] = useState<IncidentForm>({
+    title: '',
+    description: '',
+    location: '',
+    urgencyId: 0,
+  });
 
   const colorScale = scaleLinear([0, 1, 2], ['green', 'yellow', 'red']);
 
@@ -39,6 +60,12 @@ function IncidentView(): JSX.Element {
     try {
       const { data } = await api.get<Incident>(`incident/${incidentId}`);
       setIncident(data);
+      setFormData({
+        description: data.description,
+        location: data.location,
+        title: data.title,
+        urgencyId: data.urgency.id,
+      });
     } catch (e) {
       console.error(e);
       toast.error(
@@ -55,6 +82,12 @@ function IncidentView(): JSX.Element {
     void handleLoadUrgencyLevels();
   }, []);
 
+  const updateForm = (value: string | number, key: string): void => {
+    setFormData(prev => {
+      return { ...prev, [key]: value };
+    });
+  };
+
   return (
     <div className="container-fluid p-2 px-4">
       <div className="row">
@@ -68,7 +101,10 @@ function IncidentView(): JSX.Element {
         </div>
         <div className="d-flex col-12 mb-3 justify-content-between">
           <h1 className="fw-bolder text-muted fs-1">Incidente</h1>
-          <BaseButton type="success">
+          <BaseButton
+            type="success"
+            onClick={() => setModals({ ...modals, ticketForm: true })}
+          >
             <i className="fas fa-ticket" /> Abrir Ticket
           </BaseButton>
         </div>
@@ -141,6 +177,101 @@ function IncidentView(): JSX.Element {
           ))}
         </div>
       </div>
+      <BaseModal
+        open={modals.ticketForm}
+        size="xl"
+        onClose={() =>
+          setModals(prev => {
+            return { ...prev, ticketForm: false };
+          })
+        }
+      >
+        <div className="modal-header">
+          <span className="modal-title fw-bold">
+            <i className="fas fa-ticket" /> Novo Ticket
+          </span>
+        </div>
+        <div className="modal-body text-center align-middle p-4">
+          <div className="row">
+            <div className="col-12 mb-3">
+              <TextArea
+                name="title"
+                placeholder="Título"
+                value={formData.title}
+                label="Título do Incidente"
+                style={{ minHeight: '60px' }}
+                onChange={e => updateForm(e.target.value, e.target.name)}
+              />
+            </div>
+            <div className="col-12">
+              <BaseSelect
+                label="Urgência*"
+                name="urgencyId"
+                value={formData.urgencyId}
+                onChange={e =>
+                  updateForm(Number(e.target.value), e.target.name)
+                }
+              >
+                {urgencyLevels.map(level => (
+                  <option value={level.id} key={level.id}>
+                    {level.name}
+                  </option>
+                ))}
+              </BaseSelect>
+            </div>
+            <div className="col-12 mb-3">
+              <TextArea
+                name="location"
+                placeholder="Descrição"
+                label="Descrição da localização"
+                value={formData.location}
+                style={{ minHeight: '90px' }}
+                onChange={e => updateForm(e.target.value, e.target.name)}
+              />
+            </div>
+            <div className="col-12 mb-3">
+              <TextArea
+                name="description"
+                placeholder="Descrição"
+                label="Descrição do Incidente"
+                value={formData.description}
+                style={{ minHeight: '120px' }}
+                onChange={e => updateForm(e.target.value, e.target.name)}
+              />
+            </div>
+            <div className="col-12">
+              <strong className="fs-5">Imagens do ocorrido</strong>
+              <DropZone
+                files={images as unknown as FilePondInitialFile[]}
+                labelIdle='<div><strong><span class="filepond--label-action btn btn-secondary">Selecione imagens...</span></strong>'
+                acceptedFileTypes={['image/*']}
+                allowDrop
+                allowMultiple
+                allowImageEdit
+                imagePreviewHeight={100}
+                onChange={files => {
+                  setImages(files);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="modal-footer gap-2">
+          <BaseButton
+            type="secondary"
+            onClick={() =>
+              setModals(prev => {
+                return { ...prev, ticketForm: false };
+              })
+            }
+          >
+            Cancelar
+          </BaseButton>
+          <BaseButton type="success" onClick={() => {}}>
+            <i className="fas fa-save" /> Salvar
+          </BaseButton>
+        </div>
+      </BaseModal>
     </div>
   );
 }

@@ -814,6 +814,21 @@
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@pqina/filepond-plugin-image-editor@^9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@pqina/filepond-plugin-image-editor/-/filepond-plugin-image-editor-9.2.0.tgz#d2d3bcaa19e8c7191d346a4cfdc34d2afeb8fcde"
+  integrity sha512-ZByzY9yMsjsN630BhUy2iRzvKuUUd18U6nBy906Ofx88ayFVyT1V4WqUwQMXeOR520gThCPfickrhpk2+JTMrA==
+
+"@pqina/pintura@^8.89.8":
+  version "8.89.8"
+  resolved "https://registry.yarnpkg.com/@pqina/pintura/-/pintura-8.89.8.tgz#46db133eca35037b96f745099e1d9f92d9fa806b"
+  integrity sha512-HfEptPgsTK6hwRorlg4oyHOwTr4TqKSrJkzzK99mpi5slhuvxdUVi4IORtWSBLA4kzdxAu+ol7JiNqJCXmcSyQ==
+
+"@pqina/react-pintura@^9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@pqina/react-pintura/-/react-pintura-9.0.3.tgz#30627ea94e5d46a7ad29657db15262479561e4c9"
+  integrity sha512-AYeiUUO1NFBBLH72XlMSX9gt9uGOGIkl0MysveH5Zg4GpXIAgyl4YMoNo7GQ/KvuY98lIxx1X+abF3vaeWAAPQ==
+
 "@react-aria/ssr@^3.5.0":
   version "3.9.3"
   resolved "https://registry.npmjs.org/@react-aria/ssr/-/ssr-3.9.3.tgz"
@@ -2685,10 +2700,25 @@ file-entry-cache@^6.0.1:
   dependencies:
     flat-cache "^3.0.4"
 
+filepond-plugin-file-poster@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-file-poster/-/filepond-plugin-file-poster-2.5.1.tgz#8f899593660623b7967f26a7991d18de3e82a639"
+  integrity sha512-WMB6Iww//U7KJR9Yt/zZ3cxC7SVySXGTrWPnAQokYSFfDp4uD31JLtyjYAVJnEg6T+niJvNwH48jKn/X3o75og==
+
 filepond-plugin-file-validate-type@^1.2.9:
   version "1.2.9"
   resolved "https://registry.yarnpkg.com/filepond-plugin-file-validate-type/-/filepond-plugin-file-validate-type-1.2.9.tgz#84787c027354a459d91382e77adc9463ceb0182d"
   integrity sha512-Tzv07aNdZvjUXDRA3XL16QMEvh6llDrXlcZ6W0eTHQ+taHaVg/JKJTFs/AViO+6ZcpPCcQStbhYEL2HoS+vldw==
+
+filepond-plugin-image-crop@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-image-crop/-/filepond-plugin-image-crop-2.0.6.tgz#56521fa08bc56b7bc5c0b422f16d0141b4978aad"
+  integrity sha512-bSy/KND4EP/QtW8MxIj23qgSEPUVRrT8XdktJ+OU9y8xRjFjTG+qcuw1LsycARQYRtzi8cZrD3P4POOITfkywQ==
+
+filepond-plugin-image-edit@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-image-edit/-/filepond-plugin-image-edit-1.6.3.tgz#c7d488ff005c227a494861e48470cda448275b43"
+  integrity sha512-5q3RDaVlfvyI346ckF1DfKw4uN5rfAmUCv7HCG30jBZcGmepg8hFyjVM71uZXYeb4AgLhpCkSPP8Immwig8bzw==
 
 filepond-plugin-image-exif-orientation@^1.0.11:
   version "1.0.11"
@@ -2699,6 +2729,16 @@ filepond-plugin-image-preview@^4.6.12:
   version "4.6.12"
   resolved "https://registry.yarnpkg.com/filepond-plugin-image-preview/-/filepond-plugin-image-preview-4.6.12.tgz#adcff8be50f001e21ca8221a53c6870b63ebe0fe"
   integrity sha512-Y8ETX5QVV0mbPB0586UH8AUmG9tZg8PuN5bdEAIlZVJFTct5ebViJ7+Am94/VhTPjLqZjBf1zmDq5JU6XRsZKw==
+
+filepond-plugin-image-resize@^2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-image-resize/-/filepond-plugin-image-resize-2.0.10.tgz#23c1ac8956191d7dd6750565db9cf47a7dc9cfd0"
+  integrity sha512-irX+J275u8Ph1KcciCeSQmxeFjbu0+co5XVCkiwdSNnz6KiqrCKN7RXTvEbdgSdDzyi5omr2oP1rKWps5L1RsQ==
+
+filepond-plugin-image-transform@^3.8.7:
+  version "3.8.7"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-image-transform/-/filepond-plugin-image-transform-3.8.7.tgz#6d32fff899366359a77b158f9ac75ae5971e768a"
+  integrity sha512-vgKwyIDG2y5twanf7YpqZvxkaLudTjwd9vRcoq5sQDB8egUlX5/NA0bQ0823pocrm0fjbFeetICu44mkqeDkIA==
 
 filepond@^4.32.1:
   version "4.32.1"
