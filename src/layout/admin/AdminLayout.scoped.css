@@ -1,8 +1,11 @@
 .page-content {
   position: relative;
   /* 100% - navbar height */
-  height: calc(100% - 56px);
-  min-height: 100%;
+  min-height: calc(100% - 56px);
   display: flex;
   background-color: #f5fbff;
+}
+
+.page-content:has(.dashboard) {
+  height: calc(100% - 56px);
 }

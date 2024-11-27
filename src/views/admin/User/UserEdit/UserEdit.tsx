@@ -229,12 +229,19 @@ function UserEdit(): JSX.Element {
               />
             </div>
             <div className="col-4" />
-            <div className="col-1">
+            <div className="col-2">
               <BaseInput
                 name="mobilePrefix"
-                label="DDD*"
+                label="Cód. País*"
                 value={formData.mobilePrefix}
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                onChange={e =>
+                  updateForm(
+                    !e.target.value.startsWith('+')
+                      ? `+${e.target.value}`
+                      : e.target.value,
+                    e.target.name,
+                  )
+                }
               />
             </div>
             <div className="col-3">

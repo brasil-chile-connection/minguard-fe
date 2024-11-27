@@ -74,7 +74,7 @@ function Dashboard(): JSX.Element {
     void handleLoadUrgencyLevels();
   }, []);
   return (
-    <div className="container-fluid h-100 p-3 p-md-4">
+    <div className="container-fluid dashboard h-100 p-3 p-md-4">
       <div className="row h-100 gap-4 gap-md-0">
         <div className="d-flex col-md-6 h-md-100 flex-column gap-4">
           <div className="table-container p-4">

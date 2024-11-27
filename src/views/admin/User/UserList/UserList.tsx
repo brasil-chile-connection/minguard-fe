@@ -111,39 +111,43 @@ function UserList(): JSX.Element {
                       <td>{user.firstName}</td>
                       <td>{user.lastName}</td>
                       <td>{`(${user.mobilePrefix} ${user.mobileNumber})`}</td>
-                      <td className="d-flex gap-2">
-                        <BaseButton
-                          aria-label="Visualizar Usuário"
-                          size="sm"
-                          onClick={() => navigate(`/admin/usuarios/${user.id}`)}
-                        >
-                          <i className="fas fa-eye" />
-                        </BaseButton>
-                        <BaseButton
-                          aria-label="Editar Usuário"
-                          size="sm"
-                          onClick={() =>
-                            navigate(`/admin/usuarios/${user.id}/editar`)
-                          }
-                        >
-                          <i className="fas fa-edit text-info" />
-                        </BaseButton>
-                        <BaseButton
-                          aria-label="Excluir Usuário"
-                          size="sm"
-                          onClick={() => {
-                            setModals({
-                              ...modals,
-                              deleteUser: {
-                                userId: user.id,
-                                userRole: user.role.name,
-                                open: true,
-                              },
-                            });
-                          }}
-                        >
-                          <i className="fas fa-trash text-danger" />
-                        </BaseButton>
+                      <td>
+                        <div className="d-flex gap-2">
+                          <BaseButton
+                            aria-label="Visualizar Usuário"
+                            size="sm"
+                            onClick={() =>
+                              navigate(`/admin/usuarios/${user.id}`)
+                            }
+                          >
+                            <i className="fas fa-eye" />
+                          </BaseButton>
+                          <BaseButton
+                            aria-label="Editar Usuário"
+                            size="sm"
+                            onClick={() =>
+                              navigate(`/admin/usuarios/${user.id}/editar`)
+                            }
+                          >
+                            <i className="fas fa-edit text-info" />
+                          </BaseButton>
+                          <BaseButton
+                            aria-label="Excluir Usuário"
+                            size="sm"
+                            onClick={() => {
+                              setModals({
+                                ...modals,
+                                deleteUser: {
+                                  userId: user.id,
+                                  userRole: user.role.name,
+                                  open: true,
+                                },
+                              });
+                            }}
+                          >
+                            <i className="fas fa-trash text-danger" />
+                          </BaseButton>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -193,39 +197,43 @@ function UserList(): JSX.Element {
                       <td>{user.firstName}</td>
                       <td>{user.lastName}</td>
                       <td>{`(${user.mobilePrefix} ${user.mobileNumber})`}</td>
-                      <td className="d-flex gap-2">
-                        <BaseButton
-                          aria-label="Visualizar Usuário"
-                          size="sm"
-                          onClick={() => navigate(`/admin/usuarios/${user.id}`)}
-                        >
-                          <i className="fas fa-eye" />
-                        </BaseButton>
-                        <BaseButton
-                          aria-label="Editar Usuário"
-                          size="sm"
-                          onClick={() =>
-                            navigate(`/admin/usuarios/${user.id}/editar`)
-                          }
-                        >
-                          <i className="fas fa-edit text-info" />
-                        </BaseButton>
-                        <BaseButton
-                          aria-label="Excluir Usuário"
-                          size="sm"
-                          onClick={() => {
-                            setModals({
-                              ...modals,
-                              deleteUser: {
-                                userId: user.id,
-                                userRole: user.role.name,
-                                open: true,
-                              },
-                            });
-                          }}
-                        >
-                          <i className="fas fa-trash text-danger" />
-                        </BaseButton>
+                      <td>
+                        <div className="d-flex gap-2">
+                          <BaseButton
+                            aria-label="Visualizar Usuário"
+                            size="sm"
+                            onClick={() =>
+                              navigate(`/admin/usuarios/${user.id}`)
+                            }
+                          >
+                            <i className="fas fa-eye" />
+                          </BaseButton>
+                          <BaseButton
+                            aria-label="Editar Usuário"
+                            size="sm"
+                            onClick={() =>
+                              navigate(`/admin/usuarios/${user.id}/editar`)
+                            }
+                          >
+                            <i className="fas fa-edit text-info" />
+                          </BaseButton>
+                          <BaseButton
+                            aria-label="Excluir Usuário"
+                            size="sm"
+                            onClick={() => {
+                              setModals({
+                                ...modals,
+                                deleteUser: {
+                                  userId: user.id,
+                                  userRole: user.role.name,
+                                  open: true,
+                                },
+                              });
+                            }}
+                          >
+                            <i className="fas fa-trash text-danger" />
+                          </BaseButton>
+                        </div>
                       </td>
                     </tr>
                   ))}

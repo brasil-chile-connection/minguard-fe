@@ -74,7 +74,7 @@ function UserForm(): JSX.Element {
       const role = roles.find(r => r.id === selectedRole);
       await api.post(`user/register/${role!.name}`, formData);
 
-      toast.success('Usuário criado com sucesso!.', {
+      toast.success('Usuário criado com sucesso!', {
         position: 'bottom-center',
       });
 
@@ -194,11 +194,19 @@ function UserForm(): JSX.Element {
               />
             </div>
             <div className="col-4" />
-            <div className="col-1">
+            <div className="col-2">
               <BaseInput
                 name="mobilePrefix"
-                label="DDD*"
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                label="Cód. País*"
+                value={formData.mobilePrefix}
+                onChange={e =>
+                  updateForm(
+                    !e.target.value.startsWith('+')
+                      ? `+${e.target.value}`
+                      : e.target.value,
+                    e.target.name,
+                  )
+                }
               />
             </div>
             <div className="col-3">
