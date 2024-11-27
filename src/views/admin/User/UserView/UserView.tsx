@@ -10,8 +10,12 @@ import { User } from '@/types/user';
 import { Gender } from '@/types/gender';
 import { Role } from '@/types/role';
 
+import { useDispatch } from 'react-redux';
+import { setLoader } from '@/store';
+
 function UserView(): JSX.Element {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { userId } = useParams<{ userId: string }>();
   const [genders, setGenders] = useState<Gender[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -64,9 +68,11 @@ function UserView(): JSX.Element {
   };
 
   useEffect(() => {
+    dispatch(setLoader(true));
     void handleLoadGenders();
     void handleLoadRoles();
     void handleLoadUser();
+    dispatch(setLoader(false));
   }, []);
 
   return (

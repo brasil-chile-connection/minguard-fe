@@ -30,6 +30,7 @@
       "@components/*": ["./src/components/*"],
       "@types/*": ["./src/types/*"],
       "@views/*": ["./src/views/*"],
+      "@store/*": ["./src/store"],
       "@layout/*": ["./src/layout/*"],
       "@services/*": ["./src/services/*"]
     }

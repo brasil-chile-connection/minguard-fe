@@ -13,8 +13,12 @@ import { BaseTable, BaseButton } from '@components';
 import { Urgency } from '@/types/urgency';
 import { Incident } from '@/types/incident';
 
+import { useDispatch } from 'react-redux';
+import { setLoader } from '@/store';
+
 function Dashboard(): JSX.Element {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const colorScale = scaleLinear([0, 1, 2], ['green', 'yellow', 'red']);
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [urgencyLevels, setUrgencyLevels] = useState<Urgency[]>([]);
@@ -52,8 +56,10 @@ function Dashboard(): JSX.Element {
   };
 
   useEffect(() => {
+    dispatch(setLoader(true));
     void handleLoadIncidents();
     void handleLoadUrgencyLevels();
+    dispatch(setLoader(false));
   }, []);
 
   return (

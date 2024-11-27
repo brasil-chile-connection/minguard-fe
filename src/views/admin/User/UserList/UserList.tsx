@@ -8,8 +8,12 @@ import api from '@services/api';
 import { BaseTable, BaseButton, BaseModal } from '@components';
 import { User } from '@/types/user';
 
+import { useDispatch } from 'react-redux';
+import { setLoader } from '@/store';
+
 function UserList(): JSX.Element {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [users, setUsers] = useState<User[]>([]);
   const [modals, setModals] = useState({
     deleteUser: {
@@ -35,10 +39,13 @@ function UserList(): JSX.Element {
   };
 
   useEffect(() => {
+    dispatch(setLoader(true));
     void loadUsers();
+    dispatch(setLoader(false));
   }, []);
 
   const handleDeleteUser = async (): Promise<void> => {
+    dispatch(setLoader(true));
     try {
       await api.delete(`/user/${modals.deleteUser.userId}`);
       setUsers(users.filter(user => user.id !== modals.deleteUser.userId));
@@ -59,6 +66,7 @@ function UserList(): JSX.Element {
         },
       );
     }
+    dispatch(setLoader(true));
   };
 
   const translateRole = (roleName?: string): string => {

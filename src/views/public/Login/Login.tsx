@@ -12,12 +12,17 @@ import { BaseInput, BaseButton } from '@components';
 import { LoginResponse } from '@/types/auth';
 import { User } from '@/types/user';
 
+import { useDispatch } from 'react-redux';
+import { setLoader } from '@/store';
+
 function Login(): JSX.Element {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async (): Promise<void> => {
+    dispatch(setLoader(true));
     try {
       Auth.clearToken();
       const { data } = await api.post<LoginResponse>('auth/login', {
@@ -46,6 +51,7 @@ function Login(): JSX.Element {
         position: 'bottom-center',
       });
     }
+    dispatch(setLoader(false));
   };
 
   return (

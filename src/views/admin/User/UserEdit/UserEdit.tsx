@@ -9,8 +9,12 @@ import { BaseInput, BaseButton, BaseSelect, BaseModal } from '@components';
 import { UserEdit as UserEditType, User } from '@/types/user';
 import { Gender } from '@/types/gender';
 
+import { useDispatch } from 'react-redux';
+import { setLoader } from '@/store';
+
 function UserEdit(): JSX.Element {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { userId } = useParams<{ userId: string }>();
   const [genders, setGenders] = useState<Gender[]>([]);
   const [modals, setModals] = useState({
@@ -70,8 +74,10 @@ function UserEdit(): JSX.Element {
   };
 
   useEffect(() => {
+    dispatch(setLoader(true));
     void handleLoadUser();
     void handleLoadGenders();
+    dispatch(setLoader(false));
   }, []);
 
   const clearFormData = (): UserEditType => {
@@ -108,6 +114,7 @@ function UserEdit(): JSX.Element {
 
   const handleSubmit = async (): Promise<void> => {
     if (!checkPasswordFields()) return;
+    dispatch(setLoader(true));
     try {
       const data = clearFormData();
       await api.put(`user/${user?.id}`, data);
@@ -123,6 +130,7 @@ function UserEdit(): JSX.Element {
         position: 'bottom-center',
       });
     }
+    dispatch(setLoader(false));
   };
 
   const updateForm = (value: string | number, key: string): void => {

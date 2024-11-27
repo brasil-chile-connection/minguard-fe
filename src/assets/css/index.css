@@ -1,4 +1,5 @@
 @import url(./packages/bootstrap.css);
+@import url(./packages/react-loading-overlay.css);
 
 #root {
   width: 100vw;

@@ -18,8 +18,12 @@ import {
 import { Urgency } from '@/types/urgency';
 import { IncidentForm as IncidentFormType } from '@/types/incident';
 
+import { useDispatch } from 'react-redux';
+import { setLoader } from '@/store';
+
 function IncidentForm(): JSX.Element {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [urgencyLevels, setUrgencyLevels] = useState<Urgency[]>([]);
   const [images, setImages] = useState<FilePondFile[]>([]);
   const [modals, setModals] = useState({
@@ -52,10 +56,13 @@ function IncidentForm(): JSX.Element {
   };
 
   useEffect(() => {
+    dispatch(setLoader(true));
     void handleLoadUrgencyLevels();
+    dispatch(setLoader(false));
   }, []);
 
   const handleSubmit = async (): Promise<void> => {
+    dispatch(setLoader(true));
     try {
       const data = new FormData();
       const json = JSON.stringify(formData);
@@ -96,6 +103,7 @@ function IncidentForm(): JSX.Element {
         },
       );
     }
+    dispatch(setLoader(false));
   };
 
   const updateForm = (value: string | number, key: string): void => {

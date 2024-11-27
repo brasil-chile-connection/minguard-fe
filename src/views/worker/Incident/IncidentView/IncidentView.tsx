@@ -12,8 +12,12 @@ import { BaseButton } from '@components';
 import { Urgency } from '@/types/urgency';
 import { Incident } from '@/types/incident';
 
+import { useDispatch } from 'react-redux';
+import { setLoader } from '@/store';
+
 function IncidentView(): JSX.Element {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { incidentId } = useParams<{ incidentId: string }>();
   const [incident, setIncident] = useState<Incident>();
   const [urgencyLevels, setUrgencyLevels] = useState<Urgency[]>([]);
@@ -51,8 +55,10 @@ function IncidentView(): JSX.Element {
   };
 
   useEffect(() => {
+    dispatch(setLoader(true));
     void handleLoadIncident();
     void handleLoadUrgencyLevels();
+    dispatch(setLoader(false));
   }, []);
 
   return (

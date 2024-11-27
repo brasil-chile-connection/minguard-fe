@@ -10,8 +10,12 @@ import { UserForm as UserFormType } from '@/types/user';
 import { Gender } from '@/types/gender';
 import { Role } from '@/types/role';
 
+import { useDispatch } from 'react-redux';
+import { setLoader } from '@/store';
+
 function UserForm(): JSX.Element {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const [genders, setGenders] = useState<Gender[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -65,11 +69,14 @@ function UserForm(): JSX.Element {
   };
 
   useEffect(() => {
+    dispatch(setLoader(true));
     void handleLoadGenders();
     void handleLoadRoles();
+    dispatch(setLoader(false));
   }, []);
 
   const handleSubmit = async (): Promise<void> => {
+    dispatch(setLoader(true));
     try {
       const role = roles.find(r => r.id === selectedRole);
       await api.post(`user/register/${role!.name}`, formData);
@@ -88,6 +95,7 @@ function UserForm(): JSX.Element {
         },
       );
     }
+    dispatch(setLoader(false));
   };
 
   const updateForm = (value: string | number, key: string): void => {
