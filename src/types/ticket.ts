@@ -17,6 +17,7 @@ export type Ticket = {
   identifier: string;
   status: TicketStatus;
   images: string[];
+  closureComment?: string;
   createdAt: Date;
   updatedAt: Date;
 };

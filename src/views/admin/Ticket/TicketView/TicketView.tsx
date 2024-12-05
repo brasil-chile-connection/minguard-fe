@@ -122,6 +122,12 @@ function TicketView(): JSX.Element {
             <h2>Descrição</h2>
             <p>{ticket?.description}</p>
           </div>
+          {ticket?.closureComment && (
+            <div className="col-12 mb-3">
+              <h2>Comentário de finalização</h2>
+              <p>{ticket.closureComment}</p>
+            </div>
+          )}
         </div>
         <div className="row">
           <div className="col-12">

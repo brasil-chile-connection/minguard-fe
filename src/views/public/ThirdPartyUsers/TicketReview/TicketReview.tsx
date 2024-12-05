@@ -6,7 +6,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from '@services/api';
 import { toast } from 'react-toastify';
 
+import { scaleLinear } from 'd3-scale';
+
 import { Ticket, getTicketStatusColor } from '@/types/ticket';
+import { Urgency } from '@/types/urgency';
 
 import { BaseButton, BaseModal, TextArea } from '@components';
 
@@ -18,16 +21,20 @@ function TicketReview(): JSX.Element {
   const dispatch = useDispatch();
   const { ticketUUID } = useParams<{ ticketUUID: string }>();
   const [ticket, setTicket] = useState<Ticket>();
+  const [urgencyLevels, setUrgencyLevels] = useState<Urgency[]>([]);
   const [modals, setModals] = useState({
     completeTicket: false,
   });
   const [closureComment, setClosureComment] = useState('');
+
+  const colorScale = scaleLinear([0, 1, 2], ['green', 'yellow', 'red']);
 
   const handleLoadTicket = async (): Promise<void> => {
     try {
       const { data } = await api.get<Ticket>(
         `/third-party/ticket/${ticketUUID}`,
       );
+
       setTicket(data);
     } catch (e) {
       console.error(e);
@@ -40,10 +47,26 @@ function TicketReview(): JSX.Element {
     }
   };
 
+  const handleLoadUrgencyLevels = async (): Promise<void> => {
+    try {
+      const { data } = await api.get<Urgency[]>('/urgency');
+      setUrgencyLevels(data);
+    } catch (e) {
+      console.error(e);
+      toast.error(
+        'Erro ao carregar os dados da página. Tente novamente mais tarde.',
+        {
+          position: 'bottom-center',
+        },
+      );
+    }
+  };
+
   useEffect(() => {
     const loadData = async (): Promise<void> => {
       dispatch(setLoader(true));
       await handleLoadTicket();
+      await handleLoadUrgencyLevels();
       dispatch(setLoader(false));
     };
 
@@ -56,7 +79,7 @@ function TicketReview(): JSX.Element {
         closureComment,
       });
 
-      toast.error('Ticket finalizado com sucesso!', {
+      toast.success('Ticket finalizado com sucesso!', {
         position: 'bottom-center',
       });
 
@@ -80,7 +103,7 @@ function TicketReview(): JSX.Element {
             <h1 className="fw-bolder text-muted fs-1">Ticket</h1>
             <h3 className="fw-bolder text-muted fs-3">{ticketUUID}</h3>
           </div>
-          <div className="col-6 mb-3">
+          <div className="col-6 col-md-3 mb-3">
             <h3 className="fw-bold m-0">Status</h3>
             <span className="d-flex gap-1 align-items-center">
               <span
@@ -91,7 +114,23 @@ function TicketReview(): JSX.Element {
                   ),
                 }}
               />
-              <p className="fs-5 m-0">{ticket?.status.name}</p>
+              <p className="fs-5 m-0">{ticket?.status?.name}</p>
+            </span>
+          </div>
+          <div className="col-6 col-md-3 mb-3">
+            <h3 className="fw-bold m-0">Urgência</h3>
+            <span className="d-flex gap-1 align-items-center">
+              <span
+                className="urgency-badge d-block"
+                style={{
+                  backgroundColor: colorScale(
+                    urgencyLevels.findIndex(
+                      urg => urg.id === ticket?.urgency?.id,
+                    ),
+                  ),
+                }}
+              />
+              <p className="fs-5 m-0">{ticket?.urgency?.name}</p>
             </span>
           </div>
 
@@ -124,7 +163,7 @@ function TicketReview(): JSX.Element {
             <div className="col-12">
               <strong className="fs-5">Imagens do ocorrido</strong>
             </div>
-            {ticket?.images.map((image, index) => (
+            {ticket?.images?.map((image, index) => (
               <div className="d-flex col-6 flex-column" key={image}>
                 <div className="d-flex flex-column">
                   <span className="fw-bold">Imagem {index + 1}</span>
