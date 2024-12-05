@@ -36,7 +36,6 @@ function IncidentView(): JSX.Element {
     submitTicket: false,
   });
 
-  /* TODO: Modificar para TicketForm */
   const [formData, setFormData] = useState<TicketForm>({
     title: '',
     description: '',
