@@ -15,6 +15,7 @@ function BaseButton({
   disabled = false,
   size = 'md',
   onClick,
+  onKeyDown,
 }: BaseButtonProps): JSX.Element {
   return (
     <button
@@ -22,6 +23,7 @@ function BaseButton({
       className={`btn btn-${type} btn-${size}`}
       disabled={disabled}
       onClick={onClick}
+      onKeyDown={onKeyDown}
     >
       {children}
     </button>

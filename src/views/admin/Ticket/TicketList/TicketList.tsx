@@ -1,50 +1,31 @@
 import { useEffect, useState } from 'react';
-import './IncidentList.scoped.css';
-
+import './TicketList.scoped.css';
 import { useNavigate } from 'react-router-dom';
-import { scaleLinear } from 'd3-scale';
 
 import { toast } from 'react-toastify';
 import api from '@services/api';
 
 import { BaseTable, BaseButton } from '@components';
 
-import { Urgency } from '@/types/urgency';
-import { Incident } from '@/types/incident';
+import { Ticket, getTicketStatusColor } from '@/types/ticket';
 
 import { useDispatch } from 'react-redux';
 import { setLoader } from '@/store';
 
-function IncidentList(): JSX.Element {
+function TicketList(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const colorScale = scaleLinear([0, 1, 2], ['green', 'yellow', 'red']);
-  const [incidents, setIncidents] = useState<Incident[]>([]);
-  const [urgencyLevels, setUrgencyLevels] = useState<Urgency[]>([]);
 
-  const handleLoadIncidents = async (): Promise<void> => {
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+
+  const handleLoadTickets = async (): Promise<void> => {
     try {
-      const { data } = await api.get<Incident[]>(`incident`);
-      setIncidents(data);
+      const { data } = await api.get<Ticket[]>(`ticket`);
+      setTickets(data);
     } catch (e) {
       console.error(e);
       toast.error(
-        'Não foi possível carregar a lista de incidentes. Tente novamente mais tarde.',
-        {
-          position: 'bottom-center',
-        },
-      );
-    }
-  };
-
-  const handleLoadUrgencyLevels = async (): Promise<void> => {
-    try {
-      const { data } = await api.get<Urgency[]>('/urgency');
-      setUrgencyLevels(data);
-    } catch (e) {
-      console.error(e);
-      toast.error(
-        'Erro ao carregar os dados da página. Tente novamente mais tarde.',
+        'Não foi possível carregar a lista de tickets. Tente novamente mais tarde.',
         {
           position: 'bottom-center',
         },
@@ -55,8 +36,7 @@ function IncidentList(): JSX.Element {
   useEffect(() => {
     const loadData = async (): Promise<void> => {
       dispatch(setLoader(true));
-      await handleLoadIncidents();
-      await handleLoadUrgencyLevels();
+      await handleLoadTickets();
       dispatch(setLoader(false));
     };
 
@@ -68,7 +48,7 @@ function IncidentList(): JSX.Element {
       <div className="row h-100">
         <div className="col-12 h-md-100">
           <div className="table-container p-4">
-            <h2>Histórico de Incidentes</h2>
+            <h2>Histórico de Tickets</h2>
             <hr />
             <BaseTable
               className="table-bordered table-hover"
@@ -78,30 +58,28 @@ function IncidentList(): JSX.Element {
                 <tr className="table-light">
                   <th scope="col">#</th>
                   <th scope="col">Criado em</th>
-                  <th scope="col" style={{ width: '90%' }}>
+                  <th scope="col" style={{ width: '82%' }}>
                     Title
                   </th>
-                  <th scope="col">Urgência</th>
+                  <th scope="col">Status</th>
                   <th scope="col">Ações</th>
                 </tr>
               </thead>
               <tbody>
-                {incidents.map((incident, index) => (
-                  <tr key={incident.id}>
+                {tickets.map((ticket, index) => (
+                  <tr key={ticket.id}>
                     <th scope="row">{index + 1}</th>
                     <td>
-                      {new Date(incident?.createdAt || '').toLocaleDateString()}
+                      {new Date(ticket?.createdAt || '').toLocaleDateString()}
                     </td>
-                    <td>{incident.title}</td>
+                    <td>{ticket.title}</td>
                     <td>
                       <div className="d-flex justify-content-center mt-1">
                         <span
-                          className="urgency-badge"
+                          className="status-badge"
                           style={{
-                            backgroundColor: colorScale(
-                              urgencyLevels.findIndex(
-                                urg => urg.id === incident?.urgency.id,
-                              ),
+                            backgroundColor: getTicketStatusColor(
+                              ticket?.status?.id || 0,
                             ),
                           }}
                         />{' '}
@@ -110,11 +88,11 @@ function IncidentList(): JSX.Element {
                     <td>
                       <div className="d-flex justify-content-center align-items-center">
                         <BaseButton
-                          aria-label="Visualizar Incidente"
+                          aria-label="Visualizar Ticket"
                           size="sm"
                           type="primary"
                           onClick={() =>
-                            navigate(`/admin/incidentes/${incident.id}`)
+                            navigate(`/admin/tickets/${ticket.id}`)
                           }
                         >
                           <i className="fas fa-eye" />
@@ -132,4 +110,4 @@ function IncidentList(): JSX.Element {
   );
 }
 
-export default IncidentList;
+export default TicketList;

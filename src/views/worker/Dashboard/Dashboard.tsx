@@ -56,10 +56,14 @@ function Dashboard(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(setLoader(true));
-    void handleLoadIncidents();
-    void handleLoadUrgencyLevels();
-    dispatch(setLoader(false));
+    const loadData = async (): Promise<void> => {
+      dispatch(setLoader(true));
+      await handleLoadIncidents();
+      await handleLoadUrgencyLevels();
+      dispatch(setLoader(false));
+    };
+
+    void loadData();
   }, []);
 
   return (

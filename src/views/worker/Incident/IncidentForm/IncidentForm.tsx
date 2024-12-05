@@ -56,9 +56,13 @@ function IncidentForm(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(setLoader(true));
-    void handleLoadUrgencyLevels();
-    dispatch(setLoader(false));
+    const loadData = async (): Promise<void> => {
+      dispatch(setLoader(true));
+      await handleLoadUrgencyLevels();
+      dispatch(setLoader(false));
+    };
+
+    void loadData();
   }, []);
 
   const handleSubmit = async (): Promise<void> => {

@@ -11,6 +11,7 @@ import { BaseTable, BaseButton } from '@components';
 
 import { Urgency } from '@/types/urgency';
 import { Incident } from '@/types/incident';
+import { Ticket, getTicketStatusColor } from '@/types/ticket';
 
 import { useDispatch } from 'react-redux';
 import { setLoader } from '@/store';
@@ -40,8 +41,24 @@ function Dashboard(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const colorScale = scaleLinear([0, 1, 2], ['green', 'yellow', 'red']);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [urgencyLevels, setUrgencyLevels] = useState<Urgency[]>([]);
+
+  const handleLoadTickets = async (): Promise<void> => {
+    try {
+      const { data } = await api.get<Ticket[]>(`ticket`);
+      setTickets(data);
+    } catch (e) {
+      console.error(e);
+      toast.error(
+        'Não foi possível carregar a lista de tickets. Tente novamente mais tarde.',
+        {
+          position: 'bottom-center',
+        },
+      );
+    }
+  };
 
   const handleLoadIncidents = async (): Promise<void> => {
     try {
@@ -74,10 +91,14 @@ function Dashboard(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(setLoader(true));
-    void handleLoadIncidents();
-    void handleLoadUrgencyLevels();
-    dispatch(setLoader(false));
+    const loadData = async (): Promise<void> => {
+      dispatch(setLoader(true));
+      await handleLoadTickets();
+      await handleLoadIncidents();
+      await handleLoadUrgencyLevels();
+      dispatch(setLoader(false));
+    };
+    void loadData();
   }, []);
   return (
     <div className="container-fluid dashboard h-100 p-3 p-md-4">
@@ -143,71 +164,51 @@ function Dashboard(): JSX.Element {
             <hr />
             <BaseTable
               className="table-bordered table-hover"
-              style={{ maxHeight: '80%', overflowY: 'auto' }}
+              style={{ maxHeight: '70%', overflowY: 'auto' }}
             >
               <thead>
                 <tr className="table-light">
                   <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
-                  <th scope="col">Handle</th>
+                  <th scope="col" style={{ width: '90%' }}>
+                    Title
+                  </th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Ações</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Pedro</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Pedro</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Pedro</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Pedro</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Pedro</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Pedro</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Pedro</td>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+                {tickets.map((ticket, index) => (
+                  <tr key={ticket.id}>
+                    <th scope="row">{index + 1}</th>
+                    <td>{ticket.title}</td>
+                    <td>
+                      <div className="d-flex justify-content-center mt-1">
+                        <span
+                          className="status-badge"
+                          style={{
+                            backgroundColor: getTicketStatusColor(
+                              ticket?.status?.id || 0,
+                            ),
+                          }}
+                        />{' '}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="d-flex justify-content-center align-items-center">
+                        <BaseButton
+                          aria-label="Visualizar Incidente"
+                          size="sm"
+                          type="primary"
+                          onClick={() =>
+                            navigate(`/admin/tickets/${ticket.id}`)
+                          }
+                        >
+                          <i className="fas fa-eye" />
+                        </BaseButton>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </BaseTable>
           </div>

@@ -74,10 +74,14 @@ function UserEdit(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(setLoader(true));
-    void handleLoadUser();
-    void handleLoadGenders();
-    dispatch(setLoader(false));
+    const loadData = async (): Promise<void> => {
+      dispatch(setLoader(true));
+      await handleLoadUser();
+      await handleLoadGenders();
+      dispatch(setLoader(false));
+    };
+
+    void loadData();
   }, []);
 
   const clearFormData = (): UserEditType => {

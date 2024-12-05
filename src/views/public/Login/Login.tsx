@@ -73,6 +73,9 @@ function Login(): JSX.Element {
                 placeholder="Email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') void handleLogin();
+                }}
               />
               <BaseInput
                 icon="fas fa-lock"
@@ -80,9 +83,18 @@ function Login(): JSX.Element {
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') void handleLogin();
+                }}
               />
             </div>
-            <BaseButton disabled={!password || !email} onClick={handleLogin}>
+            <BaseButton
+              disabled={!password || !email}
+              onClick={handleLogin}
+              onKeyDown={e => {
+                if (e.key === 'Enter') void handleLogin();
+              }}
+            >
               <i className="fas fa-right-to-bracket" /> Entrar
             </BaseButton>
           </div>

@@ -68,11 +68,15 @@ function UserView(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(setLoader(true));
-    void handleLoadGenders();
-    void handleLoadRoles();
-    void handleLoadUser();
-    dispatch(setLoader(false));
+    const loadData = async (): Promise<void> => {
+      dispatch(setLoader(true));
+      await handleLoadGenders();
+      await handleLoadRoles();
+      await handleLoadUser();
+      dispatch(setLoader(false));
+    };
+
+    void loadData();
   }, []);
 
   return (

@@ -19,6 +19,7 @@ function BaseInput({
   type = 'text',
   disabled = false,
   onChange,
+  onKeyDown,
 }: BaseInputProps): JSX.Element {
   const inputId = useId();
   return (
@@ -41,6 +42,7 @@ function BaseInput({
             placeholder={placeholder}
             disabled={disabled}
             onChange={onChange}
+            onKeyDown={onKeyDown}
           />
         </div>
       </label>

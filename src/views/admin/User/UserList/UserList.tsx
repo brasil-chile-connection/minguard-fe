@@ -39,9 +39,13 @@ function UserList(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(setLoader(true));
-    void loadUsers();
-    dispatch(setLoader(false));
+    const loadData = async (): Promise<void> => {
+      dispatch(setLoader(true));
+      await loadUsers();
+      dispatch(setLoader(false));
+    };
+
+    void loadData();
   }, []);
 
   const handleDeleteUser = async (): Promise<void> => {

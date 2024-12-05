@@ -69,10 +69,14 @@ function UserForm(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(setLoader(true));
-    void handleLoadGenders();
-    void handleLoadRoles();
-    dispatch(setLoader(false));
+    const loadData = async (): Promise<void> => {
+      dispatch(setLoader(true));
+      await handleLoadGenders();
+      await handleLoadRoles();
+      dispatch(setLoader(false));
+    };
+
+    void loadData();
   }, []);
 
   const handleSubmit = async (): Promise<void> => {

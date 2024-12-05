@@ -18,7 +18,8 @@ import {
 import { FilePondFile, FilePondInitialFile } from 'filepond';
 
 import { Urgency } from '@/types/urgency';
-import { IncidentForm, Incident } from '@/types/incident';
+import { Incident } from '@/types/incident';
+import { TicketForm } from '@/types/ticket';
 
 import { useDispatch } from 'react-redux';
 import { setLoader } from '@/store';
@@ -36,11 +37,14 @@ function IncidentView(): JSX.Element {
   });
 
   /* TODO: Modificar para TicketForm */
-  const [formData, setFormData] = useState<IncidentForm>({
+  const [formData, setFormData] = useState<TicketForm>({
     title: '',
     description: '',
     location: '',
     urgencyId: 0,
+    responsibleId: 1,
+    incidentId: Number(incidentId) || 0,
+    statusId: 1,
   });
 
   const colorScale = scaleLinear([0, 1, 2], ['green', 'yellow', 'red']);
@@ -65,6 +69,7 @@ function IncidentView(): JSX.Element {
       const { data } = await api.get<Incident>(`incident/${incidentId}`);
       setIncident(data);
       setFormData({
+        ...formData,
         description: data.description,
         location: data.location,
         title: data.title,
@@ -81,12 +86,83 @@ function IncidentView(): JSX.Element {
     }
   };
 
+  const handleLoadIncidentImages = async (): Promise<void> => {
+    if (!incident) return;
+
+    const newImages = await Promise.all(
+      incident.images.map(async (imageUrl, index) => {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        return new File([blob], `image-${index}.jpg`, { type: blob.type });
+      }),
+    );
+    setImages(newImages as unknown as FilePondFile[]);
+  };
+
   useEffect(() => {
-    dispatch(setLoader(true));
-    void handleLoadIncident();
-    void handleLoadUrgencyLevels();
-    dispatch(setLoader(false));
+    const loadData = async (): Promise<void> => {
+      dispatch(setLoader(true));
+      await handleLoadIncident();
+      await handleLoadUrgencyLevels();
+      dispatch(setLoader(false));
+    };
+
+    void loadData();
   }, []);
+
+  const handleSubmit = async (): Promise<void> => {
+    dispatch(setLoader(true));
+    try {
+      const data = new FormData();
+      const json = JSON.stringify(formData);
+      const blob = new Blob([json], {
+        type: 'application/json',
+      });
+      data.append('request', blob);
+
+      const files: File[] = images.map(filePondFile => {
+        const { file } = filePondFile;
+        return new File([file], filePondFile.filename, {
+          type: file.type,
+          lastModified: file.lastModified,
+        });
+      });
+
+      files.forEach(image => {
+        if (image instanceof File) {
+          data.append('images', image);
+        } else {
+          console.error('Imagem inválida:', image);
+        }
+      });
+
+      const { data: postResponse } = await api.post<{ id: number }>(
+        `ticket`,
+        data,
+      );
+
+      toast.success('Ticket registrado com sucesso!.', {
+        position: 'bottom-center',
+      });
+
+      navigate(`/admin/tickets/${postResponse.id}`);
+    } catch (e) {
+      console.error(e);
+      toast.error(
+        'Erro ao registrar novo ticket. Por favor tente novamente mais tarde.',
+        {
+          position: 'bottom-center',
+        },
+      );
+    }
+    dispatch(setLoader(false));
+  };
+
+  useEffect(() => {
+    if (incident && incident.images.length) {
+      void handleLoadIncidentImages();
+    }
+  }, [incident]);
 
   const updateForm = (value: string | number, key: string): void => {
     setFormData(prev => {
@@ -273,8 +349,49 @@ function IncidentView(): JSX.Element {
           >
             Cancelar
           </BaseButton>
-          <BaseButton type="success" onClick={() => {}}>
+          <BaseButton
+            type="success"
+            onClick={() => {
+              setModals(prev => {
+                return { ...prev, submitTicket: true };
+              });
+            }}
+          >
             <i className="fas fa-save" /> Salvar
+          </BaseButton>
+        </div>
+      </BaseModal>
+      <BaseModal
+        open={modals.submitTicket}
+        size="sm"
+        onClose={() =>
+          setModals(prev => {
+            return { ...prev, submitTicket: false };
+          })
+        }
+      >
+        <div className="modal-header">
+          <span className="modal-title fw-bold">
+            <i className="fas fa-ticket" /> Novo Ticket
+          </span>
+        </div>
+        <div className="modal-body text-center align-middle p-4">
+          <i className="fas fa-save fa-4x text-success" />
+          <h4>Você confirma a criação do ticket?</h4>
+        </div>
+        <div className="modal-footer gap-2">
+          <BaseButton
+            type="secondary"
+            onClick={() =>
+              setModals(prev => {
+                return { ...prev, submitTicket: false };
+              })
+            }
+          >
+            Cancelar
+          </BaseButton>
+          <BaseButton type="success" onClick={handleSubmit}>
+            <i className="fas fa-check" /> Confirmar
           </BaseButton>
         </div>
       </BaseModal>

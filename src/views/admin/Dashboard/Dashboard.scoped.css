@@ -17,6 +17,13 @@
   border-radius: 50%;
 }
 
+.status-badge {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+}
+
+
 /* >= md */
 @media (min-width: 768px) {
   .h-md-100 {

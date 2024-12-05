@@ -55,10 +55,14 @@ function IncidentView(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(setLoader(true));
-    void handleLoadIncident();
-    void handleLoadUrgencyLevels();
-    dispatch(setLoader(false));
+    const loadData = async (): Promise<void> => {
+      dispatch(setLoader(true));
+      await handleLoadIncident();
+      await handleLoadUrgencyLevels();
+      dispatch(setLoader(false));
+    };
+
+    void loadData();
   }, []);
 
   return (
@@ -117,7 +121,7 @@ function IncidentView(): JSX.Element {
           <div className="d-flex col-12 flex-column gap-4">
             <strong className="fs-5">Imagens do ocorrido</strong>
             {incident?.images.map((image, index) => (
-              <div key={image}>
+              <div className="d-flex flex-column" key={image}>
                 <span className="fw-bold">Imagem {index + 1}</span>
                 <a href={image} target="_blank" rel="noopener noreferrer">
                   <img

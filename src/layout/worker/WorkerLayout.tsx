@@ -17,6 +17,10 @@ function WorkerLayout(): JSX.Element {
   const isLoading = useSelector((state: State) => state.isLoading);
 
   useEffect(() => {
+    document.body.style.overflowY = isLoading ? 'hidden' : 'auto';
+  }, [isLoading]);
+
+  useEffect(() => {
     const auth = async (): Promise<void> => {
       const isAuthenticated = await Auth.isAuthenticated();
       if (!isAuthenticated) {
@@ -30,7 +34,20 @@ function WorkerLayout(): JSX.Element {
     void auth();
   }, []);
   return (
-    <LoadingOverlay active={isLoading} spinner text="Carregando...">
+    <LoadingOverlay
+      active={isLoading}
+      spinner
+      text="Carregando..."
+      styles={{
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        overlay: base => ({
+          ...base,
+          zIndex: 99999,
+          height: '100vh',
+          position: 'fixed',
+        }),
+      }}
+    >
       <div style={{ height: '100%' }}>
         <Navbar />
         <div className="page-content">
