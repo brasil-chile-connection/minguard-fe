@@ -15,7 +15,7 @@ function TextArea({
   placeholder,
   label = '',
   feedback = '',
-  feedbackType = 'valid',
+  feedbackType = 'invalid',
   disabled = false,
   style,
   onChange,
@@ -38,9 +38,9 @@ function TextArea({
           <strong>{label}</strong>
         </label>
       </div>
-      <div className={`${feedbackType}-feedback`} id="basic-addon4">
-        {feedback}
-      </div>
+      {feedback && (
+        <div className={`${feedbackType}-custom-feedback`}>{feedback}</div>
+      )}
     </div>
   );
 }

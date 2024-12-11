@@ -4,6 +4,8 @@ import './BaseSelect.css';
 interface BaseSelectProps
   extends Omit<React.InputHTMLAttributes<HTMLSelectElement>, 'size'> {
   size?: 'sm' | 'md' | 'lg';
+  feedback?: string | React.ReactElement | undefined;
+  feedbackType?: 'valid' | 'invalid' | 'warning';
   label?: string;
 }
 
@@ -15,6 +17,8 @@ function BaseSelect({
   size = 'md',
   disabled = false,
   label = '',
+  feedback = '',
+  feedbackType = 'invalid',
   onChange,
 }: BaseSelectProps): JSX.Element {
   const inputId = useId();
@@ -31,6 +35,7 @@ function BaseSelect({
       >
         {children}
       </select>
+      
     </label>
   );
 }

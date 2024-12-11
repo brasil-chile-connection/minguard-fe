@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import './Login.scoped.css';
 
 import { useNavigate } from 'react-router-dom';
+import { useForm } from '@/hooks/useForm';
 
 import { toast } from 'react-toastify';
 
@@ -15,20 +15,24 @@ import { User } from '@/types/user';
 import { useDispatch } from 'react-redux';
 import { setLoader } from '@/store';
 
+type LoginForm = {
+  email: string;
+  password: string;
+};
+
 function Login(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { formData, errors, handleChange, handleErrors } = useForm<LoginForm>({
+    email: '',
+    password: '',
+  });
 
   const handleLogin = async (): Promise<void> => {
     dispatch(setLoader(true));
     try {
       Auth.clearToken();
-      const { data } = await api.post<LoginResponse>('auth/login', {
-        email,
-        password,
-      });
+      const { data } = await api.post<LoginResponse>('auth/login', formData);
       Auth.signIn(data.token, [0], data.id);
 
       const { data: user } = await api.get<User>(`user/me`);
@@ -46,10 +50,7 @@ function Login(): JSX.Element {
 
       navigate(`/${user.role.name.toLowerCase()}/dashboard`);
     } catch (e) {
-      console.error(e);
-      toast.error('Credenciais inválidas. Tente novamente.', {
-        position: 'bottom-center',
-      });
+      handleErrors(e);
     }
     dispatch(setLoader(false));
   };
@@ -69,27 +70,31 @@ function Login(): JSX.Element {
             <h3>Login</h3>
             <div>
               <BaseInput
+                name="email"
                 icon="fas fa-envelope"
                 placeholder="Email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                value={formData.email}
+                feedback={errors.email}
+                onChange={e => handleChange(e)}
                 onKeyDown={e => {
                   if (e.key === 'Enter') void handleLogin();
                 }}
               />
               <BaseInput
+                name="password"
                 icon="fas fa-lock"
                 placeholder="Senha"
                 type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
+                value={formData.password}
+                feedback={errors.password}
+                onChange={e => handleChange(e)}
                 onKeyDown={e => {
                   if (e.key === 'Enter') void handleLogin();
                 }}
               />
             </div>
             <BaseButton
-              disabled={!password || !email}
+              disabled={!formData.password || !formData.email}
               onClick={handleLogin}
               onKeyDown={e => {
                 if (e.key === 'Enter') void handleLogin();

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import './UserForm.scoped.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { useForm } from '@/hooks/useForm';
+
 import api from '@services/api';
 import { toast } from 'react-toastify';
 
@@ -26,17 +28,18 @@ function UserForm(): JSX.Element {
   const [selectedRole, setSelectedRole] = useState(
     Number(searchParams.get('roleId')) || 0,
   );
-  const [formData, setFormData] = useState<UserFormType>({
-    email: '',
-    acceptTc: true,
-    firstName: '',
-    genderId: 1,
-    lastName: '',
-    mobileNumber: '',
-    mobilePrefix: '',
-    password: '',
-    passwordConfirm: '',
-  });
+  const { formData, errors, setFormData, handleChange, handleErrors } =
+    useForm<UserFormType>({
+      email: '',
+      acceptTc: true,
+      firstName: '',
+      genderId: 1,
+      lastName: '',
+      mobileNumber: '',
+      mobilePrefix: '',
+      password: '',
+      passwordConfirm: '',
+    });
 
   const handleLoadGenders = async (): Promise<void> => {
     try {
@@ -91,20 +94,15 @@ function UserForm(): JSX.Element {
 
       navigate('/admin/equipe');
     } catch (e) {
-      console.error(e);
-      toast.error(
-        'Erro ao criar novo usuário. Por favor tente novamente mais tarde.',
-        {
-          position: 'bottom-center',
-        },
-      );
+      handleErrors(e);
     }
     dispatch(setLoader(false));
   };
 
   const updateForm = (value: string | number, key: string): void => {
-    setFormData(prev => {
-      return { ...prev, [key]: value };
+    setFormData({
+      ...formData,
+      [key]: value,
     });
   };
 
@@ -149,14 +147,16 @@ function UserForm(): JSX.Element {
               <BaseInput
                 name="firstName"
                 label="Nome*"
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.firstName}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4">
               <BaseInput
                 name="lastName"
                 label="Sobrenome*"
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.lastName}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4" />
@@ -184,7 +184,8 @@ function UserForm(): JSX.Element {
               <BaseInput
                 name="email"
                 label="Email*"
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.email}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4" />
@@ -194,7 +195,8 @@ function UserForm(): JSX.Element {
                 name="password"
                 label="Senha*"
                 type="password"
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.password}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4">
@@ -202,7 +204,8 @@ function UserForm(): JSX.Element {
                 name="passwordConfirm"
                 label="Confirmar Senha*"
                 type="password"
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.passwordConfirm}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4" />
@@ -211,6 +214,7 @@ function UserForm(): JSX.Element {
                 name="mobilePrefix"
                 label="Cód. País*"
                 value={formData.mobilePrefix}
+                feedback={errors.mobilePrefix}
                 onChange={e =>
                   updateForm(
                     !e.target.value.startsWith('+')
@@ -225,7 +229,8 @@ function UserForm(): JSX.Element {
               <BaseInput
                 name="mobileNumber"
                 label="Telefone*"
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.mobileNumber}
+                onChange={handleChange}
               />
             </div>
           </div>

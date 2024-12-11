@@ -4,6 +4,8 @@ import './IncidentForm.scoped.css';
 import { useNavigate } from 'react-router-dom';
 import { FilePondFile, FilePondInitialFile } from 'filepond';
 
+import { useForm } from '@/hooks/useForm';
+
 import api from '@services/api';
 import { toast } from 'react-toastify';
 
@@ -30,20 +32,19 @@ function IncidentForm(): JSX.Element {
     submit: false,
   });
 
-  const [formData, setFormData] = useState<IncidentFormType>({
-    title: '',
-    description: '',
-    location: '',
-    urgencyId: 0,
-  });
+  const { formData, errors, setFormData, handleChange, handleErrors } =
+    useForm<IncidentFormType>({
+      title: '',
+      description: '',
+      location: '',
+      urgencyId: 0,
+    });
 
   const handleLoadUrgencyLevels = async (): Promise<void> => {
     try {
       const { data } = await api.get<Urgency[]>('/urgency');
       setUrgencyLevels(data);
-      setFormData(prev => {
-        return { ...prev, urgencyId: data[0].id };
-      });
+      setFormData({ ...formData, urgencyId: data[0].id });
     } catch (e) {
       console.error(e);
       toast.error(
@@ -99,21 +100,13 @@ function IncidentForm(): JSX.Element {
 
       navigate('/worker/dashboard');
     } catch (e) {
-      console.error(e);
-      toast.error(
-        'Erro ao registrar novo incidente. Por favor tente novamente mais tarde.',
-        {
-          position: 'bottom-center',
-        },
-      );
+      handleErrors(e);
     }
     dispatch(setLoader(false));
   };
 
   const updateForm = (value: string | number, key: string): void => {
-    setFormData(prev => {
-      return { ...prev, [key]: value };
-    });
+    setFormData({ ...formData, [key]: value });
   };
   return (
     <div className="container-fluid p-2 px-4">
@@ -136,9 +129,10 @@ function IncidentForm(): JSX.Element {
             <TextArea
               name="title"
               placeholder="Título"
-              label="Título do Incidente"
+              label="Título do Incidente*"
+              feedback={errors.title}
               style={{ minHeight: '60px' }}
-              onChange={e => updateForm(e.target.value, e.target.name)}
+              onChange={handleChange}
             />
           </div>
           <div className="col-12">
@@ -158,9 +152,10 @@ function IncidentForm(): JSX.Element {
             <TextArea
               name="location"
               placeholder="Descrição"
-              label="Descrição da localização"
+              label="Descrição da localização*"
+              feedback={errors.location}
               style={{ minHeight: '90px' }}
-              onChange={e => updateForm(e.target.value, e.target.name)}
+              onChange={handleChange}
             />
           </div>
           <div className="col-12 mb-3">
@@ -168,8 +163,9 @@ function IncidentForm(): JSX.Element {
               name="description"
               placeholder="Descrição"
               label="Descrição do Incidente"
+              feedback={errors.description}
               style={{ minHeight: '120px' }}
-              onChange={e => updateForm(e.target.value, e.target.name)}
+              onChange={handleChange}
             />
           </div>
           <div className="col-12">

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import './UserEdit.scoped.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { useForm } from '@/hooks/useForm';
+
 import api from '@services/api';
 import { toast } from 'react-toastify';
 
@@ -22,16 +24,17 @@ function UserEdit(): JSX.Element {
   });
 
   const [user, setUser] = useState<User>();
-  const [formData, setFormData] = useState<UserEditType>({
-    acceptTc: true,
-    firstName: '',
-    genderId: 1,
-    lastName: '',
-    mobileNumber: '',
-    mobilePrefix: '',
-    password: undefined,
-    passwordConfirm: undefined,
-  });
+  const { formData, errors, setFormData, handleChange, handleErrors } =
+    useForm<UserEditType>({
+      acceptTc: true,
+      firstName: '',
+      genderId: 1,
+      lastName: '',
+      mobileNumber: '',
+      mobilePrefix: '',
+      password: undefined,
+      passwordConfirm: undefined,
+    });
 
   const handleLoadGenders = async (): Promise<void> => {
     try {
@@ -129,18 +132,13 @@ function UserEdit(): JSX.Element {
 
       navigate('/admin/equipe');
     } catch (e) {
-      console.error(e);
-      toast.error('Erro ao alterar usuário. Por favor tente novamente', {
-        position: 'bottom-center',
-      });
+      handleErrors(e);
     }
     dispatch(setLoader(false));
   };
 
   const updateForm = (value: string | number, key: string): void => {
-    setFormData(prev => {
-      return { ...prev, [key]: value };
-    });
+    setFormData({ ...formData, [key]: value });
   };
 
   const translateRole = (roleName?: string): string => {
@@ -180,7 +178,8 @@ function UserEdit(): JSX.Element {
                 name="firstName"
                 label="Nome*"
                 value={formData.firstName}
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.firstName}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4">
@@ -188,7 +187,8 @@ function UserEdit(): JSX.Element {
                 name="lastName"
                 label="Sobrenome*"
                 value={formData.lastName}
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.lastName}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4" />
@@ -228,7 +228,8 @@ function UserEdit(): JSX.Element {
                 label="Senha*"
                 type="password"
                 value={formData.password}
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.password}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4">
@@ -237,7 +238,8 @@ function UserEdit(): JSX.Element {
                 label="Confirmar Senha*"
                 type="password"
                 value={formData.passwordConfirm}
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.passwordConfirm}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4" />
@@ -246,6 +248,7 @@ function UserEdit(): JSX.Element {
                 name="mobilePrefix"
                 label="Cód. País*"
                 value={formData.mobilePrefix}
+                feedback={errors.mobilePrefix}
                 onChange={e =>
                   updateForm(
                     !e.target.value.startsWith('+')
@@ -261,7 +264,8 @@ function UserEdit(): JSX.Element {
                 name="mobileNumber"
                 label="Telefone*"
                 value={formData.mobileNumber}
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.mobileNumber}
+                onChange={handleChange}
               />
             </div>
           </div>

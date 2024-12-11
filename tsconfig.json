@@ -29,6 +29,7 @@
       "@components": ["./src/components/index"],
       "@components/*": ["./src/components/*"],
       "@types/*": ["./src/types/*"],
+      "@hooks/*": ["./src/hooks/*"],
       "@views/*": ["./src/views/*"],
       "@store/*": ["./src/store"],
       "@layout/*": ["./src/layout/*"],

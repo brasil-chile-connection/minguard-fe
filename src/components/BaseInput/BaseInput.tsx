@@ -15,7 +15,7 @@ function BaseInput({
   icon = '',
   label = '',
   feedback = '',
-  feedbackType = 'valid',
+  feedbackType = 'invalid',
   type = 'text',
   disabled = false,
   onChange,
@@ -24,7 +24,10 @@ function BaseInput({
   const inputId = useId();
   return (
     <div className="base-input">
-      <label htmlFor={inputId} className="form-label">
+      <label
+        htmlFor={inputId}
+        className={`form-label ${feedback ? 'm-0' : ''}`}
+      >
         <strong>{label}</strong>
         <div className="input-group">
           {icon && (
@@ -46,9 +49,9 @@ function BaseInput({
           />
         </div>
       </label>
-      <div className={`${feedbackType}-feedback`} id="basic-addon4">
-        {feedback}
-      </div>
+      {feedback && (
+        <div className={`${feedbackType}-custom-feedback`}>{feedback}</div>
+      )}
     </div>
   );
 }

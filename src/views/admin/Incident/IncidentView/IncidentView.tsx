@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import './IncidentView.scoped.css';
 
 import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from '@/hooks/useForm';
+
 import { scaleLinear } from 'd3-scale';
 
 import api from '@services/api';
@@ -36,15 +38,16 @@ function IncidentView(): JSX.Element {
     submitTicket: false,
   });
 
-  const [formData, setFormData] = useState<TicketForm>({
-    title: '',
-    description: '',
-    location: '',
-    urgencyId: 0,
-    responsibleId: 1,
-    incidentId: Number(incidentId) || 0,
-    statusId: 1,
-  });
+  const { formData, errors, setFormData, handleChange, handleErrors } =
+    useForm<TicketForm>({
+      title: '',
+      description: '',
+      location: '',
+      urgencyId: 0,
+      responsibleId: 1,
+      incidentId: Number(incidentId) || 0,
+      statusId: 1,
+    });
 
   const colorScale = scaleLinear([0, 1, 2], ['green', 'yellow', 'red']);
 
@@ -146,13 +149,7 @@ function IncidentView(): JSX.Element {
 
       navigate(`/admin/tickets/${postResponse.id}`);
     } catch (e) {
-      console.error(e);
-      toast.error(
-        'Erro ao registrar novo ticket. Por favor tente novamente mais tarde.',
-        {
-          position: 'bottom-center',
-        },
-      );
+      handleErrors(e);
     }
     dispatch(setLoader(false));
   };
@@ -164,9 +161,7 @@ function IncidentView(): JSX.Element {
   }, [incident]);
 
   const updateForm = (value: string | number, key: string): void => {
-    setFormData(prev => {
-      return { ...prev, [key]: value };
-    });
+    setFormData({ ...formData, [key]: value });
   };
 
   return (
@@ -281,7 +276,8 @@ function IncidentView(): JSX.Element {
                 value={formData.title}
                 label="Título do Incidente"
                 style={{ minHeight: '60px' }}
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.title}
+                onChange={handleChange}
               />
             </div>
             <div className="col-12">
@@ -289,6 +285,7 @@ function IncidentView(): JSX.Element {
                 label="Urgência*"
                 name="urgencyId"
                 value={formData.urgencyId}
+                feedback={errors.urgencyId}
                 onChange={e =>
                   updateForm(Number(e.target.value), e.target.name)
                 }
@@ -307,7 +304,8 @@ function IncidentView(): JSX.Element {
                 label="Descrição da localização"
                 value={formData.location}
                 style={{ minHeight: '90px' }}
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.location}
+                onChange={handleChange}
               />
             </div>
             <div className="col-12 mb-3">
@@ -317,7 +315,8 @@ function IncidentView(): JSX.Element {
                 label="Descrição do Incidente"
                 value={formData.description}
                 style={{ minHeight: '120px' }}
-                onChange={e => updateForm(e.target.value, e.target.name)}
+                feedback={errors.description}
+                onChange={handleChange}
               />
             </div>
             <div className="col-12">

@@ -1,0 +1,26 @@
+.valid-custom-feedback {
+  text-align: start;
+  margin-bottom: 10px;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bs-form-valid-color)
+}
+
+.invalid-custom-feedback {
+  text-align: start;
+  margin-bottom: 10px;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bs-form-invalid-color)
+}
+
+.warning-custom-feedback {
+  text-align: start;
+  margin-bottom: 10px;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(248, 248, 120);
+}
