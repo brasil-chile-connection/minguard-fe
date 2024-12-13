@@ -35,7 +35,9 @@ function BaseSelect({
       >
         {children}
       </select>
-      
+      {feedback && (
+        <div className={`${feedbackType}-custom-feedback`}>{feedback}</div>
+      )}
     </label>
   );
 }
